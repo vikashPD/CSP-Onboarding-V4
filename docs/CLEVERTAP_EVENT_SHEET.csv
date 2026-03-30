@@ -1,0 +1,149 @@
+Category,Screen,Event Name,Trigger,Properties,Event Type,Purpose
+Global,All,screen_viewed,Screen becomes visible,"screen_number, screen_name, phase, step_label, source",User Action,Funnel analysis and drop-off tracking
+Global,All,screen_exited,User leaves screen,"screen_number, screen_name, time_on_screen_sec, exit_method",User Action,Time-on-screen analysis and drop-off points
+Global,All,back_button_pressed,User presses Android back,"screen_number, screen_name, destination_screen",User Action,Navigation pattern analysis
+Global,All,language_toggled,User taps Hindi/English toggle,"from_language, to_language, screen_number",User Action,Language preference tracking
+Global,All,app_opened,App launched,"is_fresh_install, last_screen_number, time_since_last_open_hrs",System,Retention and session analysis
+Global,All,app_backgrounded,App goes to background,"screen_number, screen_name, time_in_session_sec",System,Session duration
+Global,All,app_foregrounded,App returns to foreground,"screen_number, time_in_background_sec",System,Re-engagement
+Global,All,error_displayed,Any error overlay shown,"error_type, screen_number, is_blocking, is_retryable",System,Error frequency and distribution
+Global,All,error_retry_tapped,User taps retry on error,"error_type, screen_number, retry_count",User Action,Retry behavior
+Global,All,error_dismissed,Error dismissed or resolved,"error_type, screen_number, resolution",User Action,Error resolution rates
+Global,All,talk_to_us_tapped,User taps Talk to Us CTA,"screen_number, error_type, phone_number",User Action,Support escalation tracking
+Pitch,Pitch,pitch_screen_viewed,Pitch screen shown,is_first_time,System,First impression tracking
+Pitch,Pitch,pitch_get_started_tapped,User taps Get Started,time_on_pitch_sec,User Action,Conversion from pitch to registration
+Phase 1,Screen 0: Phone Entry,phone_field_focused,User taps phone input,,User Action,Interaction start
+Phase 1,Screen 0: Phone Entry,phone_digits_entered,User types digits,digit_count,User Action,Partial entry tracking
+Phase 1,Screen 0: Phone Entry,phone_entry_completed,All 10 digits entered,time_to_complete_sec,User Action,Form completion speed
+Phase 1,Screen 0: Phone Entry,tnc_checkbox_toggled,T&C checkbox checked/unchecked,is_checked,User Action,T&C engagement
+Phase 1,Screen 0: Phone Entry,tnc_link_tapped,User taps Read Terms & Conditions,,User Action,T&C read rate
+Phase 1,Screen 0: Phone Entry,send_otp_tapped,User taps Send OTP,phone_masked,User Action,Registration start
+Phase 1,Screen 0: Phone Entry,phone_duplicate_shown,Duplicate phone error displayed,phone_masked,System,Duplicate rate
+Phase 1,Screen 0: Phone Entry,phone_duplicate_login_tapped,User chooses to login,,User Action,Redirect to login
+Phase 1,Screen 0: Phone Entry,phone_duplicate_new_number_tapped,User chooses new number,,User Action,Re-entry behavior
+Phase 1,Screen 1: OTP Verification,otp_sent,OTP dispatched to phone,"phone_masked, delivery_method",System,OTP delivery tracking
+Phase 1,Screen 1: OTP Verification,otp_digit_entered,Each OTP digit entered,digits_filled,User Action,Input progress
+Phase 1,Screen 1: OTP Verification,otp_submitted,User taps Verify,time_to_enter_sec,User Action,OTP entry speed
+Phase 1,Screen 1: OTP Verification,otp_verified_success,OTP matches,"attempt_number, time_to_verify_sec",System,Success rate
+Phase 1,Screen 1: OTP Verification,otp_verified_failed,OTP does not match,"attempt_number, attempts_remaining",System,Failure rate
+Phase 1,Screen 1: OTP Verification,otp_expired,Timer reaches 0,time_elapsed_sec,System,Expiry rate
+Phase 1,Screen 1: OTP Verification,otp_resend_tapped,User taps Resend OTP,resend_count,User Action,Resend frequency
+Phase 1,Screen 1: OTP Verification,otp_change_number_tapped,User taps Change Number,,User Action,Number change rate
+Phase 1,Screen 1: OTP Verification,otp_timer_started,Countdown timer begins,duration_sec,System,Timer tracking
+Phase 1,Screen 2: Personal & Business Info,field_filled,User completes a form field,"field_name, field_index, is_valid",User Action,Field-level completion tracking
+Phase 1,Screen 2: Personal & Business Info,field_error_shown,Validation error on field,"field_name, error_type",System,Input quality
+Phase 1,Screen 2: Personal & Business Info,entity_type_selected,Dropdown selection made,entity_type,User Action,Entity type tracking
+Phase 1,Screen 2: Personal & Business Info,personal_info_submitted,CTA Add Business Location tapped,"time_on_screen_sec, all_fields_valid",User Action,Screen completion
+Phase 1,Screen 3: Business Location,state_selected,State chosen from dropdown,state_name,User Action,Geographic distribution
+Phase 1,Screen 3: Business Location,city_entered,City field filled,city_name,User Action,City-level analysis
+Phase 1,Screen 3: Business Location,pincode_entered,Pincode filled,"pincode, is_valid",User Action,Location validation
+Phase 1,Screen 3: Business Location,gps_captured,GPS coordinates obtained,"latitude, longitude, accuracy_meters",System,Location accuracy
+Phase 1,Screen 3: Business Location,gps_capture_failed,GPS capture failed,error_reason,System,GPS failure rate
+Phase 1,Screen 3: Business Location,location_submitted,CTA Pay Registration Fee tapped,"state_name, city_name, pincode, time_on_screen_sec",User Action,Screen completion
+Phase 1,Screen 4: Registration Fee,payment_initiated,User taps Pay Rs.2000 Now,"amount, fee_type",User Action,Payment funnel start
+Phase 1,Screen 4: Registration Fee,payment_processing,Payment processing begins,"amount, fee_type, payment_method",System,Payment processing
+Phase 1,Screen 4: Registration Fee,payment_completed,Payment succeeds,"amount, fee_type, payment_method, transaction_id, time_to_complete_sec",System,Payment success rate
+Phase 1,Screen 4: Registration Fee,payment_failed,Payment declined,"amount, fee_type, error_code, error_type, retry_count",System,Payment failure analysis
+Phase 1,Screen 4: Registration Fee,payment_retry_tapped,User retries payment,"amount, fee_type, retry_count",User Action,Retry behavior
+Phase 1,Screen 4: Registration Fee,payment_later_tapped,User chooses Pay Later,"amount, fee_type",User Action,Deferred payment rate
+Phase 2,Screen 5: KYC Documents,kyc_substage_entered,User enters a KYC sub-stage,"substage, substage_index",User Action,Sub-stage funnel
+Phase 2,Screen 5: KYC Documents,kyc_substage_completed,Sub-stage fully completed,"substage, time_on_substage_sec",User Action,Sub-stage completion time
+Phase 2,Screen 5: KYC Documents,kyc_all_completed,All 3 sub-stages done,total_time_sec,User Action,KYC completion rate
+Phase 2,Screen 5: KYC Documents,kyc_number_focused,User taps number field,doc_type,User Action,Interaction start
+Phase 2,Screen 5: KYC Documents,kyc_number_entered,Number field filled,"doc_type, is_valid, char_count",User Action,Entry tracking
+Phase 2,Screen 5: KYC Documents,kyc_number_validated,Validation runs on blur,"doc_type, is_valid, error_type",System,Validation results
+Phase 2,Screen 5: KYC Documents,kyc_number_error_shown,Validation error displayed,"doc_type, error_type, error_message",System,Error frequency per doc type
+Phase 2,Screen 5: KYC Documents,doc_upload_started,User initiates upload,"doc_type, upload_source, substage",User Action,Upload method preference
+Phase 2,Screen 5: KYC Documents,doc_upload_source_selected,Camera/gallery chosen,"doc_type, upload_source",User Action,Source preference
+Phase 2,Screen 5: KYC Documents,doc_upload_photo_captured,Photo taken or selected,"doc_type, upload_source",User Action,Capture success
+Phase 2,Screen 5: KYC Documents,doc_upload_photo_retaken,User retakes photo,"doc_type, retake_count",User Action,Quality issues
+Phase 2,Screen 5: KYC Documents,doc_upload_completed,Upload finishes successfully,"doc_type, upload_source, upload_time_sec, file_size_kb",System,Upload success rate
+Phase 2,Screen 5: KYC Documents,doc_upload_failed,Upload fails,"doc_type, error_reason",System,Upload failure rate
+Phase 2,Screen 5: KYC Documents,doc_upload_removed,User removes uploaded doc,doc_type,User Action,Re-upload rate
+Phase 2,Screen 5: KYC Documents,view_sample_doc_tapped,User taps View sample document,"doc_type, substage",User Action,Sample doc usage
+Phase 2,Screen 6: Bank Details,bank_field_filled,Bank field completed,"field_name, is_valid",User Action,Field completion
+Phase 2,Screen 6: Bank Details,bank_account_masked,Account number masked on blur,,System,UX confirmation
+Phase 2,Screen 6: Bank Details,bank_account_mismatch,Re-enter doesnt match,attempt_count,System,Mismatch frequency
+Phase 2,Screen 6: Bank Details,bank_ifsc_validated,IFSC validated,"is_valid, ifsc_code",System,IFSC validation
+Phase 2,Screen 6: Bank Details,add_bank_document_tapped,CTA Add Bank Document tapped,all_fields_valid,User Action,Bank screen completion
+Phase 2,Screen 6: Bank Details,bank_dedup_checked,Dedup check triggered,,System,Dedup check rate
+Phase 2,Screen 6: Bank Details,bank_dedup_clear,No dedup found,,System,Clear rate
+Phase 2,Screen 6: Bank Details,bank_dedup_found,Dedup match found,,System,Dedup hit rate
+Phase 2,Screen 6: Bank Details,bank_dedup_change_tapped,User taps Change Bank Details on dedup bottom sheet,,User Action,Resolution behavior
+Phase 2,Screen 6: Bank Details,bank_doc_upload_started,Bank document upload initiated,"doc_subtype, upload_source",User Action,Doc type preference
+Phase 2,Screen 6: Bank Details,bank_doc_upload_completed,Bank document uploaded,"doc_subtype, upload_source, upload_time_sec",User Action,Upload success
+Phase 2,Screen 6: Bank Details,bank_doc_view_sample_tapped,User views sample bank doc,,User Action,Sample usage
+Phase 2,Screen 7: ISP Agreement,isp_upload_started,Upload initiated,upload_method,User Action,Method preference
+Phase 2,Screen 7: ISP Agreement,isp_page_added,Each page captured/selected,"page_number, upload_method",User Action,Multi-page tracking
+Phase 2,Screen 7: ISP Agreement,isp_page_removed,Page removed,page_number,User Action,Re-upload
+Phase 2,Screen 7: ISP Agreement,isp_upload_completed,ISP agreement upload done,"total_pages, upload_method, total_time_sec",User Action,Completion tracking
+Phase 2,Screen 7: ISP Agreement,isp_view_sample_tapped,User views sample ISP doc,,User Action,Sample usage
+Phase 2,Screen 7: ISP Agreement,isp_checklist_viewed,Mandatory checklist viewed,,User Action,Checklist engagement
+Phase 2,Screen 7: ISP Agreement,isp_submitted,CTA tapped to proceed,total_pages,User Action,Screen completion
+Phase 2,Screen 8: Shop & Equipment Photos,shop_photo_uploaded,Shop front photo uploaded,"upload_source, upload_time_sec",User Action,Shop photo completion
+Phase 2,Screen 8: Shop & Equipment Photos,shop_photo_removed,Shop photo removed,,User Action,Re-upload
+Phase 2,Screen 8: Shop & Equipment Photos,shop_photo_retaken,Shop photo retaken,retake_count,User Action,Quality issues
+Phase 2,Screen 8: Shop & Equipment Photos,equipment_photo_uploaded,Equipment photo added,"photo_index, upload_source, total_photos",User Action,Equipment tracking
+Phase 2,Screen 8: Shop & Equipment Photos,equipment_photo_removed,Equipment photo removed,photo_index,User Action,Re-upload
+Phase 2,Screen 8: Shop & Equipment Photos,shop_view_sample_tapped,Sample shop photo viewed,,User Action,Sample usage
+Phase 2,Screen 8: Shop & Equipment Photos,equipment_view_sample_tapped,Sample equipment photo viewed,,User Action,Sample usage
+Phase 2,Screen 8: Shop & Equipment Photos,photos_submitted,CTA Submit for Verification tapped,"shop_photo_count, equipment_photo_count, total_time_sec",User Action,Screen completion
+Phase 2,Screen 9: Verification Status,verification_submitted,All docs submitted and verification pending,"total_docs_count, time_since_reg_fee_hrs",System,Submission tracking
+Phase 2,Screen 9: Verification Status,verification_status_checked,User opens/refreshes verification screen,"current_status, days_since_submission",User Action,Status check frequency
+Phase 2,Screen 9: Verification Status,verification_approved,QA team approves,"review_time_hrs, reviewer_id",System,Approval rate and TAT
+Phase 2,Screen 9: Verification Status,verification_rejected,QA team rejects,"rejection_reason, review_time_hrs, reviewer_id",System,Rejection rate and reasons
+Phase 2,Screen 9: Verification Status,refund_initiated,Auto-refund triggered after rejection,"amount, refund_method",System,Refund tracking
+Phase 2,Screen 9: Verification Status,refund_status_viewed,User checks refund status,"refund_status, days_since_rejection",User Action,Refund monitoring
+Phase 2,Screen 9: Verification Status,refund_completed,Refund successfully processed,"amount, days_to_refund",System,Refund TAT
+Phase 2,Screen 9: Verification Status,refund_failed,Refund processing failed,"amount, error_reason",System,Refund failure rate
+Phase 3,Screen 10: Technical Assessment,tech_assessment_pending,Assessment screen shown,days_since_verification_approved,System,Wait time tracking
+Phase 3,Screen 10: Technical Assessment,tech_assessment_status_checked,User refreshes/revisits,"current_status, days_since_start",User Action,Check frequency
+Phase 3,Screen 10: Technical Assessment,tech_assessment_passed,Network Quality team approves,"assessment_time_days, assessor_id",System,Pass rate and TAT
+Phase 3,Screen 10: Technical Assessment,tech_assessment_rejected,Network Quality team rejects,"rejection_reason, assessment_time_days",System,Rejection rate and reasons
+Phase 3,Screen 10: Technical Assessment,tech_assessment_talk_to_us_tapped,User taps Talk to Us after rejection,,User Action,Support escalation
+Phase 3,Screen 11: Policy & SLA,policy_screen_viewed,Policy & SLA screen shown,time_since_tech_assessment_passed_hrs,System,Time between stages
+Phase 3,Screen 11: Policy & SLA,policy_content_scrolled,User scrolls policy content,scroll_depth_percent,User Action,Content engagement
+Phase 3,Screen 11: Policy & SLA,policy_commission_viewed,Commission section visible,,User Action,Section visibility
+Phase 3,Screen 11: Policy & SLA,policy_sla_viewed,SLA section visible,,User Action,Section visibility
+Phase 3,Screen 11: Policy & SLA,policy_accepted,CTA Understood proceed tapped,"time_on_screen_sec, scroll_depth_percent",User Action,Acceptance rate and read time
+Phase 3,Screen 12: Onboarding Fee,onboarding_fee_screen_viewed,Screen shown,"reg_fee_paid_date, days_since_reg_fee",System,Time between payments
+Phase 3,Screen 12: Onboarding Fee,investment_summary_viewed,Investment breakdown visible,,User Action,Engagement
+Phase 3,Screen 12: Onboarding Fee,payment_initiated,User taps Pay Rs.20000 Now,"amount, fee_type",User Action,Payment funnel
+Phase 3,Screen 12: Onboarding Fee,payment_completed,Payment succeeds,"amount, fee_type, payment_method, transaction_id, time_to_complete_sec",System,Success rate
+Phase 3,Screen 12: Onboarding Fee,payment_failed,Payment declined,"amount, fee_type, error_code, error_type, retry_count",System,Failure analysis
+Phase 3,Screen 12: Onboarding Fee,payment_retry_tapped,User retries,"amount, fee_type, retry_count",User Action,Retry behavior
+Phase 3,Screen 13: Account Setup,account_setup_started,Setup screen shown,business_name,System,Setup tracking
+Phase 3,Screen 13: Account Setup,account_setup_completed,Auto-progress after 3s,"setup_time_sec, business_name",System,Success rate
+Phase 3,Screen 13: Account Setup,account_setup_failed,Setup fails,"error_reason, retry_count",System,Failure rate
+Phase 3,Screen 13: Account Setup,account_setup_retry_tapped,User taps retry,retry_count,User Action,Retry behavior
+Phase 3,Screen 13: Account Setup,account_setup_pending,Setup taking longer,wait_time_sec,System,Pending rate
+Phase 3,Screen 13: Account Setup,account_setup_refresh_tapped,User taps refresh,,User Action,Refresh behavior
+Phase 3,Screen 14: Successfully Onboarded,onboarding_completed,Success screen shown,"total_onboarding_time_days, total_onboarding_time_hrs, partner_name, business_name, city, state",System,KEY METRIC — Overall completion
+Phase 3,Screen 14: Successfully Onboarded,app_download_tapped,User taps Install Now,time_on_success_screen_sec,User Action,App download rate
+Phase 3,Screen 14: Successfully Onboarded,instructions_viewed,User scrolls to instructions,scroll_depth_percent,User Action,Instruction engagement
+System,Backend,otp_delivery_attempted,System sends OTP,"phone_masked, delivery_method, provider",System,Delivery tracking
+System,Backend,otp_delivery_confirmed,OTP delivered successfully,"phone_masked, delivery_time_ms",System,Delivery success rate
+System,Backend,otp_delivery_failed,OTP delivery failed,"phone_masked, error_reason",System,Delivery failure rate
+System,Backend,dedup_check_performed,Any dedup check runs,"check_type, result, screen_number",System,Dedup analysis
+System,Backend,payment_gateway_called,Payment API called,"amount, fee_type, gateway, payment_method",System,Gateway performance
+System,Backend,payment_gateway_response,Gateway responds,"amount, fee_type, status, response_time_ms",System,Gateway reliability
+System,Backend,refund_initiated_system,Auto-refund triggered,"amount, trigger, partner_id",System,Refund tracking
+System,Backend,refund_processed,Refund completed by bank,"amount, processing_time_hrs, partner_id",System,Refund TAT
+System,Backend,account_provisioned,Backend account created,"services, setup_time_sec",System,Provisioning tracking
+Nudge,System,nudge_sent,System sends reminder,"nudge_type, channel, days_since_last_activity",System,Nudge delivery
+Nudge,System,nudge_received,Nudge delivered to device,"nudge_type, channel",System,Delivery confirmation
+Nudge,System,nudge_opened,User opens/taps nudge,"nudge_type, channel, time_since_sent_min",User Action,Nudge effectiveness
+Nudge,System,nudge_dismissed,User dismisses nudge,"nudge_type, channel",User Action,Dismissal rate
+Nudge,System,auto_reject_triggered,Day 4 auto-rejection fires,"partner_id, days_inactive",System,Auto-rejection rate
+Dashboard,QA Review,qa_application_viewed,QA opens an application,"partner_id, reviewer_id, application_status",User Action,Review tracking
+Dashboard,QA Review,qa_document_viewed,QA views a specific document,"partner_id, doc_type, reviewer_id",User Action,Document review tracking
+Dashboard,QA Review,qa_decision_made,QA approves or rejects,"partner_id, decision, rejection_reason, review_time_min, reviewer_id",User Action,Decision tracking and TAT
+Dashboard,QA Review,qa_decision_changed,QA changes previous decision,"partner_id, from_decision, to_decision, reviewer_id",User Action,Decision reversal tracking
+Dashboard,QA Review,qa_search_performed,QA searches applications,"search_query, filter_applied, results_count",User Action,Search behavior
+Dashboard,Control,admin_screen_navigated,Admin navigates to a screen,"target_screen_number, admin_id",User Action,Admin usage
+Dashboard,Control,admin_scenario_triggered,Admin triggers error scenario,"scenario_name, target_screen, admin_id",User Action,Testing patterns
+Dashboard,Control,admin_scenario_cleared,Admin clears scenario,"scenario_name, admin_id",User Action,Scenario management
+Dashboard,Control,admin_language_changed,Admin toggles language,"to_language, admin_id",User Action,Admin language control
+Dashboard,Control,admin_data_filled,Admin fills/empties form data,"mode, admin_id",User Action,Data management
+Dashboard,Control,admin_app_restarted,Admin restarts app,admin_id,User Action,App restart
+Dashboard,Control,admin_screenshot_taken,Admin captures screenshot,"screen_number, admin_id",User Action,Screenshot capture
