@@ -1,6 +1,6 @@
 # Wiom CSP Onboarding V4
 
-> **Last updated:** 30 March 2026, 3:45 PM IST
+> **Last updated:** 30 March 2026, 4:00 PM IST
 
 Android app + dashboards for Wiom Channel Sales Partner (CSP) onboarding — 15-screen flow from registration to live partner.
 
@@ -12,16 +12,16 @@ Download from [`apk/wiom-csp-onboarding-v4.apk`](apk/wiom-csp-onboarding-v4.apk)
 ### 2. Run Dashboards
 ```bash
 # Start file server (serves dashboards + prototype)
-cd dashboard && python3 -m http.server 8090
+python3 -m http.server 8090
 
 # Start bridge (connects dashboards to emulator via ADB)
-python3 bridge.py
+cd dashboard && python3 bridge.py
 ```
-- **Control Dashboard:** http://localhost:8090/control.html
-- **QA Review Dashboard:** http://localhost:8090/qa-review.html
+- **Control Dashboard:** http://localhost:8090/dashboard/control.html
+- **QA Review Dashboard:** http://localhost:8090/dashboard/qa-review.html
 
 ### 3. View HTML Prototype
-Open [`prototype/index.html`](prototype/index.html) in browser or visit http://localhost:8090/../prototype/index.html
+Open [`prototype/index.html`](prototype/index.html) in browser or visit http://localhost:8090/prototype/index.html
 
 ## Structure
 
@@ -73,7 +73,7 @@ CSP-Onboarding-V4/
 - Hilt for DI
 - Jetpack Navigation
 - MVVM architecture
-- Python bridge for dashboard ↔ emulator communication
+- Python bridge for dashboard-emulator communication
 
 ## Build from Source
 
@@ -82,3 +82,11 @@ export ANDROID_HOME=~/Library/Android/sdk
 ./gradlew assembleDebug
 # APK at: app/build/outputs/apk/debug/app-debug.apk
 ```
+
+## Audits Applied
+
+- **17 dead CTAs** wired with proper actions (dialer, navigation, retry)
+- **85+ Hindi strings** updated to natural Hinglish (सत्यापन→वेरिफिकेशन, भुगतान→पेमेंट, etc.)
+- **Step counters** standardized across all phases
+- **Code split** into 26 focused files (1 screen per file, 10 component files)
+- **Consistent BottomBar** pattern across all screens

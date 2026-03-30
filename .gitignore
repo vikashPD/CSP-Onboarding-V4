@@ -34,8 +34,3 @@ gradle-app.setting
 *.bak
 *.swp
 *~
-app/build/
-.gradle/
-*.iml
-.idea/
-local.properties
