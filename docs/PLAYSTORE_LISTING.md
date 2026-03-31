@@ -14,10 +14,10 @@
 ## Short Description (max 80 characters)
 
 **Hindi (default):**
-> Wiom CSP बनें — अपना इंटरनेट बिज़नेस बढ़ाएँ
+> Wiom CSP बनो — इंटरनेट का काम करो, ज़्यादा कमाओ
 
 **English:**
-> Become a Wiom CSP — Grow your internet business
+> Become a Wiom CSP — Do internet work, earn more
 
 ---
 
@@ -25,83 +25,81 @@
 
 **Hindi (default):**
 
-> **Wiom for Business — अपने इंटरनेट बिज़नेस को नई ऊँचाई पर ले जाएँ**
+> **Wiom for Business — इंटरनेट का काम करो, ज़्यादा कमाओ**
 >
-> आप पहले से इंटरनेट का काम करते हैं?
-> आपके पास केबल, राउटर और इन्फ्रास्ट्रक्चर है?
-> बस एक कदम और — Wiom CSP (Connection Service Provider) बनें और अपनी कमाई बढ़ाएँ।
+> आप इंटरनेट का काम करते हैं?
+> आपके पास केबल और राउटर है?
+> तो Wiom CSP बनो — Wiom आपके इलाक़े में कस्टमर लाएगा, आप कनेक्शन दो और कमाओ।
 >
-> **Wiom क्या है?**
-> Wiom भारत का सबसे तेज़ी से बढ़ता इंटरनेट प्लेटफ़ॉर्म है। Wiom आपके इलाक़े में इंटरनेट की माँग (demand) लाता है और आपकी मौजूदा इन्फ्रास्ट्रक्चर से जोड़ता है — आप कनेक्शन दें, Wiom कस्टमर लाए।
+> **Wiom क्या करता है?**
+> Wiom आपके इलाक़े में लोगों को इंटरनेट से जोड़ता है। कस्टमर Wiom के हैं — आपका काम बस अच्छा कनेक्शन देना है। बाक़ी सब Wiom सँभालता है।
 >
 > **Wiom CSP बनने के फ़ायदे:**
 >
 > 💰 हर नए कनेक्शन पर कमाई
 > 💰 हर रिचार्ज पर कमाई
-> 📅 हर हफ़्ते पेआउट — सीधे बैंक में
-> 📱 अपने बिज़नेस को ट्रैक करने के लिए Wiom Partner Plus ऐप
-> 🛠️ Wiom की टेक्नोलॉजी और सपोर्ट — बिल्कुल फ़्री
-> 📈 Wiom जितने ज़्यादा कस्टमर लाए, उतनी ज़्यादा कमाई
+> 📅 हर हफ़्ते पैसे — सीधे बैंक में
+> 📱 अपना काम देखने के लिए Wiom Partner Plus ऐप
+> 🛠️ Wiom का पूरा सपोर्ट — बिल्कुल फ़्री
+> 📈 ज़्यादा कस्टमर = ज़्यादा कमाई
 >
 > **कौन बन सकता है Wiom CSP?**
 >
-> • ISP / LCO (लोकल केबल ऑपरेटर)
-> • इंटरनेट सर्विस देने वाले छोटे व्यापारी
-> • जिनके पास मौजूदा इंटरनेट इन्फ्रास्ट्रक्चर है
+> • LCO (लोकल केबल ऑपरेटर)
+> • जो पहले से इंटरनेट का काम करते हैं
+> • जिनके पास केबल, राउटर और सेटअप है
 >
 > **CSP बनना कितना आसान है?**
 >
-> 1️⃣ ऐप डाउनलोड करें
-> 2️⃣ अपनी जानकारी भरें
-> 3️⃣ दस्तावेज़ अपलोड करें (PAN, आधार, GST)
-> 4️⃣ वेरिफ़िकेशन पूरा होने दें
-> 5️⃣ बस! आप Wiom CSP हैं — कमाई शुरू!
+> 1️⃣ ऐप डाउनलोड करो
+> 2️⃣ अपनी जानकारी भरो
+> 3️⃣ PAN, आधार, GST अपलोड करो
+> 4️⃣ Wiom टीम चेक करेगी
+> 5️⃣ बस! कमाई शुरू!
 >
-> **अपने इंटरनेट बिज़नेस को Wiom की ताक़त दें।**
-> **आज ही CSP बनें! 🚀**
+> **आज ही Wiom CSP बनो! 🚀**
 >
-> सवाल हैं? हमसे बात करें: 7836811111
+> कोई सवाल? बात करो: 7836811111
 
 ---
 
 **English:**
 
-> **Wiom for Business — Take your internet business to new heights**
+> **Wiom for Business — Do internet work, earn more**
 >
-> Already running an internet business?
-> Have cables, routers, and infrastructure?
-> Just one more step — become a Wiom CSP (Connection Service Provider) and grow your earnings.
+> You do internet work?
+> You have cables and routers?
+> Then become a Wiom CSP — Wiom will bring customers to your area, you give them connection and earn.
 >
-> **What is Wiom?**
-> Wiom is India's fastest-growing internet platform. Wiom brings internet demand from customers in your locality and maps it to your existing infrastructure — you provide the connection, Wiom brings the customers.
+> **What does Wiom do?**
+> Wiom connects people in your area to the internet. Customers are Wiom's — your job is just to give good connection. Wiom handles everything else.
 >
 > **Benefits of becoming a Wiom CSP:**
 >
 > 💰 Earn on every new connection
 > 💰 Earn on every recharge
-> 📅 Weekly payouts — directly to your bank
-> 📱 Wiom Partner Plus app to track your business
-> 🛠️ Wiom's technology and support — completely free
-> 📈 More demand from Wiom = more earnings for you
+> 📅 Money every week — straight to your bank
+> 📱 Wiom Partner Plus app to see your work
+> 🛠️ Full support from Wiom — completely free
+> 📈 More customers = more earnings
 >
 > **Who can become a Wiom CSP?**
 >
-> • ISPs / LCOs (Local Cable Operators)
-> • Small internet service providers
-> • Anyone with existing internet infrastructure
+> • LCOs (Local Cable Operators)
+> • Anyone already doing internet work
+> • Anyone with cables, routers, and a setup
 >
 > **How easy is it to become a CSP?**
 >
 > 1️⃣ Download the app
-> 2️⃣ Fill in your details
-> 3️⃣ Upload documents (PAN, Aadhaar, GST)
-> 4️⃣ Wait for verification
-> 5️⃣ Done! You're a Wiom CSP — start earning!
+> 2️⃣ Fill your details
+> 3️⃣ Upload PAN, Aadhaar, GST
+> 4️⃣ Wiom team will check
+> 5️⃣ Done! Start earning!
 >
-> **Power your internet business with Wiom.**
 > **Become a Wiom CSP today! 🚀**
 >
-> Questions? Talk to us: 7836811111
+> Any questions? Talk to us: 7836811111
 
 ---
 
