@@ -1,6 +1,6 @@
 # Wiom CSP Onboarding — CleverTap Event Sheet
 
-**Version:** 1.0 | **Date:** 30 March 2026 | **Status:** Draft
+**Version:** 1.1 | **Date:** 30 March 2026 | **Status:** Draft
 **Source PRD:** PRD_HUMAN.md V3.2
 **Platform:** Android (com.wiom.csp)
 
@@ -44,6 +44,8 @@
 | `screen_viewed` | Screen becomes visible | `screen_number`, `screen_name`, `phase`, `step_label`, `source` (`"navigation"` / `"back"` / `"deep_link"` / `"dev_skip"`) | Funnel analysis, drop-off tracking |
 | `screen_exited` | User leaves screen | `screen_number`, `screen_name`, `time_on_screen_sec`, `exit_method` (`"cta"` / `"back"` / `"app_kill"` / `"timeout"`) | Time-on-screen analysis, drop-off points |
 | `back_button_pressed` | User presses Android back | `screen_number`, `screen_name`, `destination_screen` | Navigation pattern analysis |
+| `disabled_cta_tapped` | User taps a disabled CTA button | `screen_number`, `screen_name`, `cta_name`, `disabled_reason` | Friction point tracking |
+| `session_data_restored` | Form data preserved after back-forward navigation | `screen_number`, `fields_restored_count` | Data persistence verification |
 
 ### 1.2 Language & App State
 
@@ -89,6 +91,7 @@
 | `phone_duplicate_shown` | Duplicate phone error displayed | `phone_masked` | Duplicate rate |
 | `phone_duplicate_login_tapped` | User chooses to login | — | Redirect to login |
 | `phone_duplicate_new_number_tapped` | User chooses new number | — | Re-entry behavior |
+| `phone_input_blocked` | Non-numeric or >10 digit input blocked | `block_reason` (`"non_numeric"` / `"exceeds_10_digits"`) | Input validation tracking |
 
 ### Screen 1: OTP Verification
 
@@ -102,7 +105,8 @@
 | `otp_expired` | Timer reaches 0 | `time_elapsed_sec` (28) | Expiry rate |
 | `otp_resend_tapped` | User taps "Resend OTP" | `resend_count` | Resend frequency |
 | `otp_change_number_tapped` | User taps "Change Number" | — | Number change rate |
-| `otp_timer_started` | Countdown timer begins | `duration_sec` (28) | — |
+| `otp_timer_started` | Countdown timer begins | `duration_sec` (28), `trigger` (`"initial"` / `"resend"`) | Timer tracking |
+| `otp_max_attempts_reached` | 3 wrong attempts exhausted, user locked out | `phone_masked` | Lockout tracking |
 
 ### Screen 2: Personal & Business Info
 
@@ -112,6 +116,8 @@
 | `field_error_shown` | Validation error on field | `field_name`, `error_type` (`"blank"` / `"invalid_email"`) | Input quality |
 | `entity_type_selected` | Dropdown selection made | `entity_type` (`"proprietorship"`) | — |
 | `personal_info_submitted` | CTA "Add Business Location" tapped | `time_on_screen_sec`, `all_fields_valid` (bool) | Screen completion |
+| `field_focused` | User taps into a form field | `field_name` (`"full_name"` / `"email"` / `"entity_type"` / `"business_name"`), `screen_number` | Interaction start per field |
+| `business_name_locked` | Business name field locked after reg fee payment | `business_name` | Lock event tracking |
 
 ### Screen 3: Business Location
 
@@ -123,6 +129,9 @@
 | `gps_captured` | GPS coordinates obtained | `latitude`, `longitude`, `accuracy_meters` | Location accuracy |
 | `gps_capture_failed` | GPS capture failed | `error_reason` | GPS failure rate |
 | `location_submitted` | CTA "Pay Registration Fee" tapped | `state_name`, `city_name`, `pincode`, `time_on_screen_sec` | Screen completion |
+| `address_entered` | Full address field filled | `char_count` | Address field tracking |
+| `gps_capture_initiated` | GPS capture started (before success/fail) | — | GPS flow start |
+| `pincode_validation_error` | Invalid pincode entered | `error_type` (`"incomplete"` / `"invalid"`) | Pincode validation |
 
 ### Screen 4: Registration Fee (Rs.2,000)
 
@@ -134,6 +143,7 @@
 | `payment_failed` | Payment declined | `amount`, `fee_type`, `error_code`, `error_type` (`"declined"` / `"timeout"`), `retry_count` | Payment failure analysis |
 | `payment_retry_tapped` | User retries payment | `amount`, `fee_type`, `retry_count` | Retry behavior |
 | `payment_later_tapped` | User chooses "Pay Later" | `amount`, `fee_type` | Deferred payment rate |
+| `payment_refresh_tapped` | User taps Refresh Status on timeout | `amount`, `fee_type` | Timeout refresh tracking (distinct from retry) |
 
 ---
 
@@ -148,6 +158,8 @@
 | `kyc_substage_entered` | User enters a KYC sub-stage | `substage` (`"pan"` / `"aadhaar"` / `"gst"`), `substage_index` (1-3) | Sub-stage funnel |
 | `kyc_substage_completed` | Sub-stage fully completed | `substage`, `time_on_substage_sec` | Sub-stage completion time |
 | `kyc_all_completed` | All 3 sub-stages done | `total_time_sec` | KYC completion rate |
+| `kyc_substage_next_tapped` | User taps Next to proceed between sub-stages | `from_substage`, `to_substage` | Sub-stage progression |
+| `kyc_substage_locked_tapped` | User tries to access a locked sub-stage | `attempted_substage`, `current_substage` | Friction tracking |
 
 #### Number Entry (PAN / Aadhaar / GST)
 
@@ -187,6 +199,9 @@
 | `bank_doc_upload_started` | Bank document upload initiated | `doc_subtype` (`"bank_statement"` / `"cancelled_cheque"` / `"bank_passbook"`), `upload_source` | Doc type preference |
 | `bank_doc_upload_completed` | Bank document uploaded | `doc_subtype`, `upload_source`, `upload_time_sec` | Upload success |
 | `bank_doc_view_sample_tapped` | User views sample bank doc | — | Sample usage |
+| `bank_doc_type_selected` | User selects bank doc type from 3 options | `doc_subtype` (`"bank_statement"` / `"cancelled_cheque"` / `"bank_passbook"`) | Doc type preference |
+| `bank_doc_upload_failed` | Bank document upload fails | `doc_subtype`, `error_reason` | Upload failure tracking |
+| `bank_doc_submitted` | Bank document screen completed, proceeds to ISP | `doc_subtype`, `upload_time_sec` | Screen completion |
 
 ### Screen 7: ISP Agreement Upload
 
@@ -207,11 +222,14 @@
 | `shop_photo_uploaded` | Shop front photo uploaded | `upload_source`, `upload_time_sec` | Shop photo completion |
 | `shop_photo_removed` | Shop photo removed | — | Re-upload |
 | `shop_photo_retaken` | Shop photo retaken | `retake_count` | Quality issues |
-| `equipment_photo_uploaded` | Equipment photo added | `photo_index` (1-5), `upload_source`, `total_photos` | Equipment tracking |
+| `equipment_photo_uploaded` | Equipment photo added | `photo_index` (1-5), `upload_source`, `total_photos`, `equipment_type` (`"power_backup"` / `"olt"` / `"isp_switch"` / `"other"`) | Equipment tracking |
 | `equipment_photo_removed` | Equipment photo removed | `photo_index` | Re-upload |
 | `shop_view_sample_tapped` | Sample shop photo viewed | — | Sample usage |
 | `equipment_view_sample_tapped` | Sample equipment photo viewed | — | Sample usage |
 | `photos_submitted` | CTA "Submit for Verification" tapped | `shop_photo_count` (1), `equipment_photo_count` (1-5), `total_time_sec` | Screen completion |
+| `equipment_photo_retaken` | Equipment photo retaken | `photo_index`, `retake_count` | Quality issues |
+| `shop_photo_upload_failed` | Shop photo upload fails | `error_reason` | Upload failure rate |
+| `equipment_photo_upload_failed` | Equipment photo upload fails | `photo_index`, `error_reason` | Upload failure rate |
 
 ### Screen 9: Verification Status
 
@@ -239,6 +257,7 @@
 | `tech_assessment_passed` | Network Quality team approves | `assessment_time_days`, `assessor_id` | Pass rate, TAT |
 | `tech_assessment_rejected` | Network Quality team rejects | `rejection_reason`, `assessment_time_days` | Rejection rate, reasons |
 | `tech_assessment_talk_to_us_tapped` | User taps "Talk to Us" after rejection | — | Support escalation |
+| `tech_assessment_no_refund_shown` | No refund messaging displayed after rejection | — | User reaction to no-refund messaging |
 
 ### Screen 11: Policy & SLA
 
@@ -260,6 +279,8 @@
 | `payment_completed` | Payment succeeds | `amount`, `fee_type`, `payment_method`, `transaction_id`, `time_to_complete_sec` | Success rate |
 | `payment_failed` | Payment declined | `amount`, `fee_type`, `error_code`, `error_type`, `retry_count` | Failure analysis |
 | `payment_retry_tapped` | User retries | `amount`, `fee_type`, `retry_count` | Retry behavior |
+| `payment_processing` | Payment processing begins | `amount` (20000), `fee_type` (`"onboarding"`), `payment_method` | Processing state tracking |
+| `payment_refresh_tapped` | User taps Refresh Status on timeout | `amount` (20000), `fee_type` (`"onboarding"`) | Timeout refresh tracking |
 
 ### Screen 13: Account Setup
 
@@ -279,6 +300,7 @@
 | `onboarding_completed` | Success screen shown | `total_onboarding_time_days`, `total_onboarding_time_hrs`, `partner_name`, `business_name`, `city`, `state` | **KEY METRIC** — Overall completion |
 | `app_download_tapped` | User taps "Install Now" | `time_on_success_screen_sec` | App download rate |
 | `instructions_viewed` | User scrolls to instructions | `scroll_depth_percent` | Instruction engagement |
+| `app_store_redirected` | User redirected to Play Store after Install Now tap | `store_url` | Actual redirect tracking |
 
 ---
 
@@ -333,6 +355,9 @@
 | `admin_data_filled` | Admin fills/empties form data | `mode` (`"filled"` / `"empty"`), `admin_id` | — |
 | `admin_app_restarted` | Admin restarts app | `admin_id` | — |
 | `admin_screenshot_taken` | Admin captures screenshot | `screen_number`, `admin_id` | — |
+| `admin_state_reset` | Admin resets app state | `admin_id` | State reset tracking |
+| `admin_state_dumped` | Admin dumps app state to file | `admin_id`, `dump_status` | State dump tracking |
+| `admin_state_read` | Admin reads app state file | `admin_id` | State read tracking |
 
 ---
 
@@ -430,28 +455,28 @@ verification_submitted → verification_approved → tech_assessment_passed → 
 
 | Category | Event Count |
 |----------|-------------|
-| Global (navigation, language, errors) | 11 |
+| Global (navigation, language, errors) | 13 |
 | Pitch Screen | 2 |
-| Screen 0: Phone Entry | 9 |
-| Screen 1: OTP Verification | 9 |
-| Screen 2: Personal & Business Info | 4 |
-| Screen 3: Business Location | 6 |
-| Screen 4: Registration Fee | 6 |
-| Screen 5: KYC Documents | 15 |
-| Screen 6: Bank Details | 12 |
+| Screen 0: Phone Entry | 10 |
+| Screen 1: OTP Verification | 10 |
+| Screen 2: Personal & Business Info | 6 |
+| Screen 3: Business Location | 9 |
+| Screen 4: Registration Fee | 7 |
+| Screen 5: KYC Documents | 17 |
+| Screen 6: Bank Details | 15 |
 | Screen 7: ISP Agreement | 7 |
-| Screen 8: Shop & Equipment Photos | 7 |
+| Screen 8: Shop & Equipment Photos | 11 |
 | Screen 9: Verification Status | 8 |
-| Screen 10: Technical Assessment | 5 |
+| Screen 10: Technical Assessment | 6 |
 | Screen 11: Policy & SLA | 5 |
-| Screen 12: Onboarding Fee | 6 |
+| Screen 12: Onboarding Fee | 8 |
 | Screen 13: Account Setup | 6 |
-| Screen 14: Successfully Onboarded | 3 |
+| Screen 14: Successfully Onboarded | 4 |
 | System Events | 9 |
 | Nudge Events | 5 |
 | QA Dashboard | 5 |
-| Admin Dashboard | 7 |
-| **Total** | **~150 events** |
+| Admin Dashboard | 10 |
+| **Total** | **~178 events** |
 
 ---
 
