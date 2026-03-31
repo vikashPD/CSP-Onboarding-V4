@@ -542,9 +542,11 @@ ctas:
   - text_hi: "दोबारा भुगतान करें"
     text_en: "Retry Payment"
     type: primary
-  - text_hi: "बाद में करें"
-    text_en: "Pay Later"
+  - text_hi: "हमसे बात करें"
+    text_en: "Talk to Us"
     type: secondary
+    action: CALL_SUPPORT
+    phone: "7836811111"
 ```
 
 ### SCREEN_4_ERROR: REGFEE_TIMEOUT
@@ -1175,9 +1177,11 @@ ctas:
   - text_hi: "दोबारा भुगतान करें"
     text_en: "Retry Payment"
     type: primary
-  - text_hi: "बाद में करें"
-    text_en: "Pay Later"
+  - text_hi: "हमसे बात करें"
+    text_en: "Talk to Us"
     type: secondary
+    action: CALL_SUPPORT
+    phone: "7836811111"
 ```
 
 ### SCREEN_12_ERROR: ONBOARDFEE_TIMEOUT

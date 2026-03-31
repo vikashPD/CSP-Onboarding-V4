@@ -54,7 +54,6 @@ Phase 1,Screen 4: Registration Fee,payment_processing,Payment processing begins,
 Phase 1,Screen 4: Registration Fee,payment_completed,Payment succeeds,"amount, fee_type, payment_method, transaction_id, time_to_complete_sec",System,Payment success rate
 Phase 1,Screen 4: Registration Fee,payment_failed,Payment declined,"amount, fee_type, error_code, error_type, retry_count",System,Payment failure analysis
 Phase 1,Screen 4: Registration Fee,payment_retry_tapped,User retries payment,"amount, fee_type, retry_count",User Action,Retry behavior
-Phase 1,Screen 4: Registration Fee,payment_later_tapped,User chooses Pay Later,"amount, fee_type",User Action,Deferred payment rate
 Phase 1,Screen 4: Registration Fee,payment_refresh_tapped,User taps Refresh Status on timeout,"amount, fee_type",User Action,Timeout refresh tracking distinct from retry
 Phase 2,Screen 5: KYC Documents,kyc_substage_entered,User enters a KYC sub-stage,"substage, substage_index",User Action,Sub-stage funnel
 Phase 2,Screen 5: KYC Documents,kyc_substage_completed,Sub-stage fully completed,"substage, time_on_substage_sec",User Action,Sub-stage completion time

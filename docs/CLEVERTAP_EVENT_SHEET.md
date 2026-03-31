@@ -142,7 +142,6 @@
 | `payment_completed` | Payment succeeds | `amount`, `fee_type`, `payment_method`, `transaction_id`, `time_to_complete_sec` | Payment success rate |
 | `payment_failed` | Payment declined | `amount`, `fee_type`, `error_code`, `error_type` (`"declined"` / `"timeout"`), `retry_count` | Payment failure analysis |
 | `payment_retry_tapped` | User retries payment | `amount`, `fee_type`, `retry_count` | Retry behavior |
-| `payment_later_tapped` | User chooses "Pay Later" | `amount`, `fee_type` | Deferred payment rate |
 | `payment_refresh_tapped` | User taps Refresh Status on timeout | `amount`, `fee_type` | Timeout refresh tracking (distinct from retry) |
 
 ---

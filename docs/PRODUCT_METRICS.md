@@ -135,7 +135,6 @@ These tell us: **Are CSPs getting through the registration smoothly?**
 | B3 | **Phone Duplicate Rate** | `phone_duplicate_shown` / `send_otp_tapped` x 100 | W | Product |
 | B4 | **Registration Fee Payment Rate** | `payment_completed (reg)` / `location_submitted` x 100 | W | Product + Finance |
 | B5 | **Registration Fee Failure Rate** | `payment_failed (reg)` / `payment_initiated (reg)` x 100 | D, W | Engineering + Finance |
-| B6 | **Pay Later Rate** | `payment_later_tapped` / screen 4 views x 100 | W | Product |
 | B7 | **Reg Fee Pending (not paid)** | CSPs who reached Screen 4 but haven't paid after 24hrs | D | Sales/Ops |
 | B8 | **Avg. Registration Time** | Median time from `send_otp_tapped` to `payment_completed (reg)` | W | Product |
 | B9 | **Profile Completion Rate** | `personal_info_submitted` / `otp_verified_success` x 100 | W | Product |
