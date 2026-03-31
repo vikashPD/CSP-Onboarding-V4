@@ -28,11 +28,11 @@
 > **Wiom for Business — अपने इंटरनेट बिज़नेस को नई ऊँचाई पर ले जाएँ**
 >
 > आप पहले से इंटरनेट का काम करते हैं?
-> आपके पास केबल, राउटर और कस्टमर्स हैं?
+> आपके पास केबल, राउटर और इन्फ्रास्ट्रक्चर है?
 > बस एक कदम और — Wiom CSP (Connection Service Provider) बनें और अपनी कमाई बढ़ाएँ।
 >
 > **Wiom क्या है?**
-> Wiom भारत का सबसे तेज़ी से बढ़ता इंटरनेट प्लेटफ़ॉर्म है। हम आपकी मौजूदा इंटरनेट इन्फ्रास्ट्रक्चर पर टेक्नोलॉजी लेयर देते हैं — जिससे आपके कस्टमर्स को बेहतर अनुभव मिले और आपको ज़्यादा कमाई।
+> Wiom भारत का सबसे तेज़ी से बढ़ता इंटरनेट प्लेटफ़ॉर्म है। Wiom आपके इलाक़े में इंटरनेट की माँग (demand) लाता है और आपकी मौजूदा इन्फ्रास्ट्रक्चर से जोड़ता है — आप कनेक्शन दें, Wiom कस्टमर लाए।
 >
 > **Wiom CSP बनने के फ़ायदे:**
 >
@@ -41,7 +41,7 @@
 > 📅 हर हफ़्ते पेआउट — सीधे बैंक में
 > 📱 अपने बिज़नेस को ट्रैक करने के लिए Wiom Partner Plus ऐप
 > 🛠️ Wiom की टेक्नोलॉजी और सपोर्ट — बिल्कुल फ़्री
-> 📈 जितने ज़्यादा कस्टमर, उतनी ज़्यादा कमाई
+> 📈 Wiom जितने ज़्यादा कस्टमर लाए, उतनी ज़्यादा कमाई
 >
 > **कौन बन सकता है Wiom CSP?**
 >
@@ -69,11 +69,11 @@
 > **Wiom for Business — Take your internet business to new heights**
 >
 > Already running an internet business?
-> Have cables, routers, and customers?
+> Have cables, routers, and infrastructure?
 > Just one more step — become a Wiom CSP (Connection Service Provider) and grow your earnings.
 >
 > **What is Wiom?**
-> Wiom is India's fastest-growing internet platform. We add a technology layer on top of your existing internet infrastructure — giving your customers a better experience and you more earnings.
+> Wiom is India's fastest-growing internet platform. Wiom brings internet demand from customers in your locality and maps it to your existing infrastructure — you provide the connection, Wiom brings the customers.
 >
 > **Benefits of becoming a Wiom CSP:**
 >
@@ -82,7 +82,7 @@
 > 📅 Weekly payouts — directly to your bank
 > 📱 Wiom Partner Plus app to track your business
 > 🛠️ Wiom's technology and support — completely free
-> 📈 More customers = more earnings
+> 📈 More demand from Wiom = more earnings for you
 >
 > **Who can become a Wiom CSP?**
 >
