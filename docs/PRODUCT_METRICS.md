@@ -255,6 +255,13 @@ These tell us: **Where are CSPs hitting problems?**
 | H7 | **Bank Dedup Block Rate** | `bank_dedup_found` / `add_bank_document_tapped` x 100 | W | Product |
 | H8 | **App Crash Rate** | Crashes / sessions x 100 (from Crashlytics) | D | Engineering |
 | H9 | **No Internet Error Rate** | `error_displayed (no_internet)` / total sessions x 100 | W | Engineering |
+| H10 | **Uninstall Rate (pre-activation)** | `app_uninstalled` (before CSP_ONBOARDED) / total installs x 100 | W, M | Product + Growth |
+| H11 | **Uninstall by Phase** | Distribution of `phase` at time of `app_uninstalled` | W, M | Product |
+| H12 | **Uninstall by Screen** | Distribution of `last_screen_number` at time of `app_uninstalled` | W, M | Product |
+| H13 | **Reinstall Rate** | `app_reinstalled` / `app_uninstalled` x 100 | W, M | Growth |
+| H14 | **Reinstall from Notification** | `app_reinstalled` where `reinstall_source = "notification"` / R-series notifications sent x 100 | W | Growth |
+| H15 | **Time to Reinstall** | Median `days_since_uninstall` from `app_reinstalled` | M | Growth |
+| H16 | **Paid-but-Uninstalled** | CSPs who paid reg fee but uninstalled before completion | D, W | Ops + Product |
 
 ---
 

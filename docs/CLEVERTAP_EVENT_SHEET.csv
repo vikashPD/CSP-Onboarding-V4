@@ -6,6 +6,8 @@ Global,All,language_toggled,User taps Hindi/English toggle,"from_language, to_la
 Global,All,app_opened,App launched,"is_fresh_install, last_screen_number, time_since_last_open_hrs",System,Retention and session analysis
 Global,All,app_backgrounded,App goes to background,"screen_number, screen_name, time_in_session_sec",System,Session duration
 Global,All,app_foregrounded,App returns to foreground,"screen_number, time_in_background_sec",System,Re-engagement
+Global,All,app_uninstalled,CSP uninstalls the app,"last_screen_number, last_screen_name, phase, days_since_install, reg_fee_paid, verification_status",System,Uninstall tracking and churn analysis
+Global,All,app_reinstalled,CSP reinstalls after previous uninstall,"days_since_uninstall, reinstall_source, last_phase_before_uninstall",System,Re-engagement effectiveness
 Global,All,error_displayed,Any error overlay shown,"error_type, screen_number, is_blocking, is_retryable",System,Error frequency and distribution
 Global,All,error_retry_tapped,User taps retry on error,"error_type, screen_number, retry_count",User Action,Retry behavior
 Global,All,error_dismissed,Error dismissed or resolved,"error_type, screen_number, resolution",User Action,Error resolution rates
@@ -156,6 +158,12 @@ Nudge,System,nudge_received,Nudge delivered to device,"nudge_type, channel",Syst
 Nudge,System,nudge_opened,User opens/taps nudge,"nudge_type, channel, time_since_sent_min",User Action,Nudge effectiveness
 Nudge,System,nudge_dismissed,User dismisses nudge,"nudge_type, channel",User Action,Dismissal rate
 Nudge,System,auto_reject_triggered,Day 4 auto-rejection fires,"partner_id, days_inactive",System,Auto-rejection rate
+Notification,System,notification_sent,System sends campaign notification,"campaign_id, channel, csp_id",System,Campaign delivery tracking
+Notification,System,notification_delivered,Notification reaches device/WhatsApp,"campaign_id, channel, delivery_time_ms",System,Delivery confirmation
+Notification,System,notification_opened,CSP taps/opens notification,"campaign_id, channel, time_since_sent_min",User Action,Open rate tracking
+Notification,System,notification_action_taken,CSP performs intended action within 24hrs,"campaign_id, channel, action",User Action,Action effectiveness
+Notification,System,notification_dismissed,CSP dismisses notification,"campaign_id, channel",User Action,Dismissal tracking
+Notification,System,whatsapp_fallback_to_sms,WhatsApp failed and SMS sent as fallback,"campaign_id, csp_id, whatsapp_failure_reason",System,Fallback rate tracking
 Dashboard,QA Review,qa_application_viewed,QA opens an application,"partner_id, reviewer_id, application_status",User Action,Review tracking
 Dashboard,QA Review,qa_document_viewed,QA views a specific document,"partner_id, doc_type, reviewer_id",User Action,Document review tracking
 Dashboard,QA Review,qa_decision_made,QA approves or rejects,"partner_id, decision, rejection_reason, review_time_min, reviewer_id",User Action,Decision tracking and TAT

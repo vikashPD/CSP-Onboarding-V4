@@ -56,7 +56,14 @@
 | `app_backgrounded` | App goes to background | `screen_number`, `screen_name`, `time_in_session_sec` | Session duration |
 | `app_foregrounded` | App returns to foreground | `screen_number`, `time_in_background_sec` | Re-engagement |
 
-### 1.3 Error States
+### 1.3 Uninstall & Reinstall
+
+| Event Name | Trigger | Properties | Purpose |
+|------------|---------|------------|---------|
+| `app_uninstalled` | CSP uninstalls the app (detected by CleverTap) | `last_screen_number`, `last_screen_name`, `phase`, `days_since_install`, `reg_fee_paid` (bool), `verification_status` (`"not_submitted"` / `"pending"` / `"approved"` / `"rejected"` / `null`) | Uninstall tracking, churn analysis |
+| `app_reinstalled` | CSP reinstalls after previous uninstall | `days_since_uninstall`, `reinstall_source` (`"organic"` / `"notification"` / `"unknown"`), `last_phase_before_uninstall` | Re-engagement effectiveness |
+
+### 1.4 Error States
 
 | Event Name | Trigger | Properties | Purpose |
 |------------|---------|------------|---------|
@@ -327,6 +334,12 @@
 | `nudge_received` | Nudge delivered to device | `nudge_type`, `channel` | Delivery confirmation |
 | `nudge_opened` | User opens/taps nudge | `nudge_type`, `channel`, `time_since_sent_min` | Nudge effectiveness |
 | `nudge_dismissed` | User dismisses nudge | `nudge_type`, `channel` | Dismissal rate |
+| `notification_sent` | System sends any campaign notification | `campaign_id`, `channel` (`"whatsapp"` / `"sms"` / `"push"`), `csp_id` | Campaign delivery tracking |
+| `notification_delivered` | Notification reaches device/WhatsApp | `campaign_id`, `channel`, `delivery_time_ms` | Delivery confirmation |
+| `notification_opened` | CSP taps/opens notification | `campaign_id`, `channel`, `time_since_sent_min` | Open rate tracking |
+| `notification_action_taken` | CSP performs intended action within 24hrs | `campaign_id`, `channel`, `action` (`"resumed_onboarding"` / `"called_support"` / `"reinstalled_app"`) | Action effectiveness |
+| `notification_dismissed` | CSP dismisses notification | `campaign_id`, `channel` | Dismissal tracking |
+| `whatsapp_fallback_to_sms` | WhatsApp failed, SMS sent as fallback | `campaign_id`, `csp_id`, `whatsapp_failure_reason` | Fallback rate tracking |
 | `auto_reject_triggered` | Day 4 auto-rejection fires | `partner_id`, `days_inactive` | Auto-rejection rate |
 
 ---
