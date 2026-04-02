@@ -50,7 +50,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 | **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance |
 | **M3** | Registration | Phase 1 | Collect personal, business, and location details |
 | **M4** | Fee Collection | Phase 1, 3 | Configure fee types, values, and checkpoints; connect to PG for execution; ensure financial reconciliation |
-| **M5** | Verification & Assessment | Phase 2, 3 | Collect documents, facilitate QA review, conduct tech assessment |
+| **M5** | Verification & Assessment | Phase 2, 3 | Verify personal, business, financial, and operational credentials; facilitate QA review and tech assessment |
 | **M6** | CSP Policy | Phase 3 | Present policies, SLA, commissions; record acceptance |
 | **M7** | CSP Account Setup | Phase 3 | Create backend accounts, confirm onboarding |
 
@@ -200,7 +200,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 | Depended On By | Why |
 |----------------|-----|
 | M4 — Fee Collection | Needs profile data; triggers trade name lock |
-| M5 — Verification | References profile for document cross-checking |
+| M5 — Verification & Assessment | References profile for identity and business cross-verification |
 | M7 — Account Setup | Uses full profile for backend accounts |
 
 | Must NOT Depend On |
@@ -271,27 +271,28 @@ Joining the Wiom club costs money — paid in stages. This module is the price l
 
 📄 **Detail doc:** [`M5_VERIFICATION_ASSESSMENT.md`](M5_VERIFICATION_ASSESSMENT.md)
 
-**Objective:** Collect all required documents, run configured checks, facilitate human QA review, and conduct technical assessment. This is the gatekeeper — it determines whether a partner qualifies.
+**Objective:** Verify the partner's personal identity, business legitimacy, financial credentials, and operational readiness against compliance, quality, and business standards. This is the gatekeeper — it determines whether a partner qualifies.
 
 **Explain Like I'm 10:**
-You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like trying out for a cricket team. Show your ID cards, bank proof, your agreement with the internet company, and photos of your shop and equipment. A review team checks everything. If approved, a technical team checks if your setup is good enough. Only if BOTH pass do you move forward. Documents fail → deposit back. Technical fails → no refund.
+You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like a school verifying your admission documents. Are you who you say you are? Is your business real? Is your bank account valid? Do you have the right agreements in place? Is your shop actually set up to serve customers? A review team checks all of this. If approved, a technical team visits to check if your setup is good enough to run. Only if BOTH pass do you move forward. Verification fails → deposit back. Technical fails → no refund.
 
 **IS Responsible For:**
-- Collect KYC identity documents (numbers + uploads) as per configured document list
-- Run validation and cross-checks on submitted data
-- Collect bank account details and run dedup checks
-- Collect mandatory bank proof document
-- Collect business agreement documents (multi-page upload support)
-- Collect shop and equipment photos
-- Provide sample/reference documents for all upload stages
-- Display document submission status and checklist
-- Send submitted data to QA review team and receive approved/rejected decisions
+- Verify partner's personal identity against configured compliance checks (KYC)
+- Verify business legitimacy through required business documents and agreements
+- Verify financial credentials (bank details, dedup checks, bank proof)
+- Verify operational readiness (shop setup, equipment, infrastructure)
+- Run configured validations, cross-checks, and dedup checks on all submitted data
+- Accept inputs via configured methods (document uploads, API verification, or both)
+- Provide reference/sample guidance for all verification stages
+- Display verification progress and submission status
+- Facilitate human QA review of the partner's complete application
+- Receive and handle approved/rejected decisions from QA
 - Signal M4 on verification rejection (M4 coordinates refund via PG)
-- Facilitate technical assessment of partner's infrastructure and location
+- Facilitate technical assessment of partner's infrastructure and location feasibility
 - Handle assessment passed/rejected outcomes
 
 **Is NOT Responsible For:**
-- Processing payments or refunds (→ M4; this module only sends the trigger)
+- Processing payments or refunds (→ M4; this module only sends the signal)
 - Authentication (→ M1)
 - Collecting personal/business profile info (→ M3; reads as reference only)
 - Presenting policies or terms (→ M6)
@@ -309,7 +310,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 
 | Depends On | Why |
 |------------|-----|
-| M3 — Registration | Partner profile for document cross-referencing |
+| M3 — Registration | Partner profile for identity and business cross-verification |
 | M4 — Fee Collection | Verification phase starts after registration fee confirmed |
 | Wiom User Registry (Internal) | Dedup checks |
 | Wiom Document Storage (Internal) | Store uploaded documents |
@@ -548,7 +549,7 @@ PARTNER OPENS APP
   └────┬────┘
        ▼
   ┌─────────┐
-  │   M5    │  Documents → QA Review
+  │   M5    │  Verify identity, business, financials, operations → QA Review
   │         │     ├── REJECTED → Refund via PG (M4) → END
   │         │     └── APPROVED → Tech Assessment
   │         │           ├── REJECTED → No refund → END
