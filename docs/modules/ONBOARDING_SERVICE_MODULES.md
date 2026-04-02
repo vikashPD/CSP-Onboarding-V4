@@ -167,7 +167,7 @@ Before playing any game, you read the rules and say "I agree." This module is th
 **Objective:** Build the partner's profile — personal identity, business details, and physical location. This is the foundation every downstream module references.
 
 **Explain Like I'm 10:**
-Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'm in Indore, here's my address." Wiom needs this to send equipment, show your shop to customers, and match your name against your ID documents later. It's like filling a membership form — name, address, shop type.
+Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'm in Indore, here's my address." Wiom needs this to verify your identity, check your location feasibility, and match your name against your ID documents later. It's like filling a membership form — name, address, shop type. Once you submit this and it gets verified, you can't change it until you're fully onboarded. After that, any changes go through a proper approval process.
 
 **IS Responsible For:**
 - Collect personal identity details (name, contact information)
@@ -177,6 +177,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 - Receive verified identity from M1
 - Provide profile data as read-only reference to downstream modules
 - Lock business/trade name after registration fee is paid (triggered by M4)
+- Freeze all submitted details once verified — no edits allowed until onboarding is complete
 
 **Is NOT Responsible For:**
 - Verifying identity against government databases (→ M5)
@@ -184,12 +185,14 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 - Identity verification or authentication (→ M1)
 - T&C (→ M2)
 - Document collection or KYC (→ M5)
+- Post-onboarding detail modifications (→ compliance team's post-live modification process)
 
 **Must NEVER:**
 - Allow progress to M4 with any required field empty
 - Modify the verified identity from M1
 - Perform KYC verification or collect documents
 - Allow business/trade name edits after registration fee is paid
+- Allow any detail edits once submitted and verified — details are immutable until onboarding completes
 
 **Dependencies:**
 
