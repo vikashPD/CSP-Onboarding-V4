@@ -280,7 +280,7 @@ Joining the Wiom club costs money — paid in stages. This module is the price l
 **Objective:** Verify the partner's personal identity, business legitimacy, financial credentials, and operational readiness against compliance, quality, and business standards. This is the gatekeeper — it determines whether a partner qualifies.
 
 **Explain Like I'm 10:**
-You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like a school verifying your admission documents. Are you who you say you are? Is your business real? Is your bank account valid? Do you have the right agreements in place? Is your shop actually set up to serve customers? A review team checks all of this. If approved, a technical team visits to check if your setup is good enough to run. Only if BOTH pass do you move forward. Verification fails → deposit back. Technical fails → no refund.
+You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like a school verifying your admission documents. Are you who you say you are? Is your business real? Is your bank account valid? Do you have the right agreements in place? Is your shop actually set up to serve customers? A review team checks all of this. If approved, Wiom sends sample devices to your location and assesses your infrastructure performance from the telemetry data those devices send back. Only if BOTH pass do you move forward. Verification fails → deposit back. Technical fails → no refund.
 
 **IS Responsible For:**
 - Verify partner's personal identity against configured compliance checks (KYC)
@@ -294,7 +294,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 - Facilitate human QA review of the partner's complete application
 - Receive and handle approved/rejected decisions from QA
 - Signal M4 on verification rejection (M4 coordinates refund via PG)
-- Facilitate technical assessment of partner's infrastructure and location feasibility
+- Facilitate technical assessment via sample device telemetry to evaluate partner's infrastructure performance
 - Handle assessment passed/rejected outcomes
 
 **Is NOT Responsible For:**
