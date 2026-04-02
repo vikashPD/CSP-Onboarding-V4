@@ -207,7 +207,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 |----------------|-----|
 | M4 — Fee Collection | Needs profile data; triggers trade name lock |
 | M5 — Verification & Assessment | References profile for identity and business cross-verification |
-| M7 — Account Setup | Uses full profile for backend accounts |
+| M7 — Account Setup | Receives all CSP details for account setup |
 
 | Must NOT Depend On |
 |---------------------|
@@ -403,7 +403,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 - Mark the onboarding journey as complete
 
 **Is NOT Responsible For:**
-- Collecting any partner data (reads from M3, M5)
+- Collecting any partner data (receives all CSP details from upstream modules)
 - Processing payments (→ M4)
 - Document verification (→ M5)
 - T&C or policy presentation (→ M2, M6)
@@ -420,9 +420,8 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 
 | Depends On | Why |
 |------------|-----|
+| All upstream modules (M1–M6) | Receives all CSP details — identity, profile, verification, financial, policy acceptance — for account setup |
 | M4 — Fee Collection | Starts after onboarding fee confirmed |
-| M3 — Registration | Reads full partner profile |
-| M5 — Verification & Assessment | Reads verified bank details for payout setup |
 | Payout Infrastructure (3P) | Create partner fund account |
 | CRM System (3P) | Register partner |
 | Wiom Ledger / Finance Service (Internal) | Create financial ledger |
@@ -434,7 +433,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 
 | Must NOT Depend On |
 |---------------------|
-| M1, M2, M6, KYC APIs |
+| KYC APIs, Payment Gateway |
 
 ---
 
@@ -495,8 +494,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | M5 → M6 | Approved + tech passed unlocks policy |
 | M6 → M4 | Policy accepted enables onboarding fee |
 | M4 → M7 | Onboarding fee confirmed unlocks account setup |
-| M3 → M7 | Profile read for backend accounts |
-| M5 → M7 | Bank details read for payout setup |
+| M1–M6 → M7 | All CSP details passed for account setup |
 
 ### Module → Internal Services
 
