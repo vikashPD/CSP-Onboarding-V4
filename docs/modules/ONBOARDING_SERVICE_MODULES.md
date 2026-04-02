@@ -291,8 +291,8 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 - Accept inputs via configured methods (document uploads, API verification, or both)
 - Provide reference/sample guidance for all verification stages
 - Display verification progress and submission status
-- Facilitate human QA review of the partner's complete application
-- Receive and handle approved/rejected decisions from QA
+- Facilitate QA review of the partner's complete application — via API-based verification from 3P suites, human review via Wiom Hub Dashboard, or both
+- Receive and handle approved/rejected decisions from QA (automated, human, or combined)
 - Signal M4 on verification rejection (M4 coordinates refund via PG)
 - Facilitate technical assessment via sample device telemetry to evaluate partner's infrastructure performance
 - Handle assessment passed/rejected outcomes
@@ -303,10 +303,10 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 - Collecting personal/business profile info (→ M3; reads as reference only)
 - Presenting policies or terms (→ M6)
 - Creating backend accounts (→ M7)
-- Making QA decisions — it facilitates human reviewers only
+- Making QA decisions on its own — decisions come from configured verification sources (3P APIs, human reviewers via Wiom Hub Dashboard, or both)
 
 **Must NEVER:**
-- Auto-approve or auto-reject — all QA decisions must be human
+- Approve or reject on its own — decisions must come from configured verification sources (3P APIs, human reviewers, or both)
 - Let a partner proceed to activation without QA approval
 - Let a partner pass technical assessment without a confirmed "passed" outcome
 - Process or hold any payment
@@ -320,7 +320,8 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 | M4 — Fee Collection | Verification phase starts after registration fee confirmed |
 | Wiom User Registry (Internal) | Dedup checks |
 | Wiom Document Storage (Internal) | Store uploaded documents |
-| Wiom QA Review Dashboard (Internal) | Send data for review, receive decisions |
+| Wiom Hub Dashboard (Internal) | Send data for human review when configured, receive decisions |
+| 3P Verification Suites (3P) | API-based automated verification when configured |
 | Wiom Technical Assessment Service (Internal) | Request and receive assessment |
 | Wiom Notification Service (Internal) | Status updates, decisions, results |
 | KYC Verification APIs (3P) — Future | Real identity document verification |
@@ -511,7 +512,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | M4 | Notification Service | Confirmations, reminders |
 | M5 | User Registry | Dedup checks |
 | M5 | Document Storage | Uploaded documents |
-| M5 | QA Review Dashboard | Review data, receive decisions |
+| M5 | Wiom Hub Dashboard | Human review when configured, receive decisions |
 | M5 | Technical Assessment Service | Assessment requests/results |
 | M5 | Notification Service | Status and decision updates |
 | M6 | CMS / Policy Config | Policy content, rates, terms |
