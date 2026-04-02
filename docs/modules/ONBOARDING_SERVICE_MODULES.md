@@ -47,7 +47,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 | ID | Formal Name | Phase(s) | One-Line Purpose |
 |----|-------------|----------|------------------|
 | **M1** | Authentication | Phase 1 | Verify the partner owns a unique identity and establish an authenticated session |
-| **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance |
+| **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance — serves both onboarding and Partner BAU app |
 | **M3** | Registration | Phase 1 | Collect personal, business, and location details |
 | **M4** | Fee Collection | Phase 1, 3 | Configure fee types, values, and checkpoints; connect to PG for execution; ensure financial reconciliation |
 | **M5** | Verification & Assessment | Phase 2, 3 | Verify personal, business, financial, and operational credentials; facilitate QA review and tech assessment |
@@ -114,18 +114,19 @@ Before joining the Wiom shopkeeper club, you prove who you are. The app checks y
 
 📄 **Detail doc:** [`M2_TNC.md`](M2_TNC.md)
 
-**Objective:** Present the current T&C version, record the partner's explicit acceptance with version and timestamp, and block progress until accepted.
+**Objective:** Manage the complete T&C lifecycle — versions, presentation, and acceptance tracking — across both the onboarding flow and the Wiom Partner BAU app.
 
 **Explain Like I'm 10:**
-Before playing any game, you read the rules and say "I agree." This module is the rulebook. Rules can change over time, so it tracks every version, shows the latest, and records exactly when you agreed. If rules change later, Wiom knows which version you signed.
+Before playing any game, you read the rules and say "I agree." This module is the rulebook. Rules can change over time, so it tracks every version, shows the latest, and records exactly when you agreed. But the rulebook doesn't retire after onboarding — even after you're a partner, if Wiom updates the rules, the Partner app shows you the new version and asks you to agree again. This module handles both: the first-time agreement during onboarding AND any future re-agreements in the live app.
 
 **IS Responsible For:**
 - Maintain a T&C version registry (version, content/link, created timestamp)
 - Serve the current T&C version for display
 - Record acceptance per partner (version accepted, timestamp)
 - Store full acceptance history (append-only)
-- Provide a check for other modules: "Has this partner accepted the latest T&C?"
-- Block forward progress until accepted
+- Provide a check for other modules/apps: "Has this partner accepted the latest T&C?"
+- Block forward progress during onboarding until accepted
+- Serve T&C to the Wiom Partner BAU app for post-onboarding re-acceptance when T&C is updated
 
 **Is NOT Responsible For:**
 - Drafting or authoring T&C content (→ Legal/Compliance)
@@ -143,13 +144,14 @@ Before playing any game, you read the rules and say "I agree." This module is th
 
 | Depends On | Why |
 |------------|-----|
-| M1 — Authentication | Partner must be verified first |
+| M1 — Authentication | Partner must be verified first (onboarding context) |
 | Wiom CMS / Legal Content Service (Internal) | Fetch T&C versions and content |
 | Wiom Partner Database (Internal) | Store acceptance records |
 
 | Depended On By | Why |
 |----------------|-----|
 | M3 — Registration | Cannot begin until T&C accepted |
+| Wiom Partner BAU App | Serves T&C for post-onboarding re-acceptance on version updates |
 
 | Must NOT Depend On |
 |---------------------|
