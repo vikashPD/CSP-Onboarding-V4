@@ -1,8 +1,10 @@
 # Wiom CSP Onboarding Service — Module Architecture Document
 
-**Version:** 1.1 | **Date:** 01 April 2026 | **Status:** Production Specification
+**Version:** 1.2 | **Date:** 02 April 2026 | **Status:** Production Specification
 **Parent PRD:** [PRD_HUMAN.md v3.2](../PRD_HUMAN.md)
 **Audience:** Product, Engineering, QA, Business Stakeholders, External Vendors
+
+> **Note:** This document describes **what each module does in principle** — its role, boundaries, and connections. Specific values (fee amounts, document types, field lists, screen counts) live in the PRD and may change across versions. The module architecture remains stable.
 
 ---
 
@@ -30,21 +32,13 @@ This document breaks down the CSP Onboarding flow into **7 service modules** —
 
 ## 2. Onboarding Service Overview
 
-The onboarding service takes a new Channel Sales Partner from "I'm interested" to "I'm onboarded and ready to serve customers" — **15 screens + 1 Pitch**, **3 phases**, **7 modules**.
+The onboarding service takes a new Connection Service Provider from "I'm interested" to "I'm onboarded and ready to serve customers" — organised into **3 phases** powered by **7 modules**.
 
 | Phase | Name | What Happens | Modules |
 |-------|------|--------------|---------|
-| **Phase 1** | Registration | Sign up, provide details, pay Rs.2K | M1, M2, M3, M4 |
+| **Phase 1** | Registration | Sign up, provide details, pay registration fee | M1, M2, M3, M4 |
 | **Phase 2** | Verification | Submit documents, QA review | M5 |
-| **Phase 3** | Activation | Tech assessment, policy, pay Rs.20K, account setup | M4, M5, M6, M7 |
-
-| Metric | Value |
-|--------|-------|
-| Total Screens | 15 + 1 Pitch |
-| Service Modules | 7 |
-| Error Scenarios | 22 across 8 categories |
-| Total Fees | Rs.22,000 (Rs.2,000 + Rs.20,000) |
-| Dashboards | 2 (Control + QA Review) |
+| **Phase 3** | Activation | Tech assessment, policy acceptance, pay onboarding fee, account setup | M4, M5, M6, M7 |
 
 ---
 
@@ -55,7 +49,7 @@ The onboarding service takes a new Channel Sales Partner from "I'm interested" t
 | **M1** | Authentication Service | Phase 1 | Verify partner's mobile number via OTP and establish identity |
 | **M2** | Terms & Conditions Service | Phase 1 | Manage T&C versions, present terms, record acceptance |
 | **M3** | Registration Service | Phase 1 | Collect personal, business, and location details |
-| **M4** | Fee Collection Service | Phase 1, 3 | Collect Rs.2K and Rs.20K payments, handle refunds |
+| **M4** | Fee Collection Service | Phase 1, 3 | Collect configured fees at defined checkpoints, handle refunds |
 | **M5** | Verification & Assessment Service | Phase 2, 3 | Collect documents, facilitate QA review, conduct tech assessment |
 | **M6** | CSP Policy Service | Phase 3 | Present policies, SLA, commissions; record acceptance |
 | **M7** | CSP Account Setup Service | Phase 3 | Create backend accounts, confirm onboarding |
@@ -72,36 +66,35 @@ The onboarding service takes a new Channel Sales Partner from "I'm interested" t
 
 📄 **Detail doc:** [`M1_AUTH.md`](M1_AUTH.md)
 
-**Objective:** Verify the partner owns a real, unique mobile number before anything else happens.
+**Objective:** Verify that the partner owns a real, unique mobile number before anything else happens.
 
 **Explain Like I'm 10:**
 Before joining the Wiom shopkeeper club, you prove you have a real phone number. The app sends a secret code, you type it back. If it matches — you're in. If that number is already taken — sorry, one person, one number. That's all this module does: check your phone, check the code, open the door.
 
 **IS Responsible For:**
-- Capture + validate 10-digit mobile number (+91)
-- Phone duplicate check
-- Send OTP, verify OTP, manage OTP lifecycle (expiry, resend, 3-attempt limit)
-- Establish authenticated session
-- Pass verified phone number to downstream modules
+- Capture and validate partner's mobile number
+- Check if the number is already registered (duplicate check)
+- Send OTP, verify OTP, manage OTP lifecycle (expiry, resend, attempt limits)
+- Establish an authenticated session
+- Pass the verified phone number to downstream modules
 
 **Is NOT Responsible For:**
-- Collecting name, email, or any personal details (→ M3)
+- Collecting personal or business details (→ M3)
 - T&C presentation or acceptance (→ M2)
 - Payments (→ M4)
-- KYC or document handling (→ M5)
+- Document or KYC handling (→ M5)
 
 **Must NEVER:**
 - Store OTPs in plain text or client-side
-- Allow >3 wrong OTP attempts without blocking
-- Let anyone bypass OTP to proceed forward
-- Accept phone numbers ≠ 10 digits
-- Let a duplicate phone proceed
+- Allow unlimited wrong OTP attempts
+- Let anyone bypass OTP verification to proceed
+- Let a duplicate phone number proceed
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
-| SMS/WhatsApp OTP Gateway (3P) | Send OTP |
+| OTP Gateway (3P) | Send OTP |
 | Wiom User Registry (Internal) | Phone duplicate check |
 | Session Management (Internal) | Create authenticated session |
 
@@ -120,21 +113,21 @@ Before joining the Wiom shopkeeper club, you prove you have a real phone number.
 
 📄 **Detail doc:** [`M2_TNC.md`](M2_TNC.md)
 
-**Objective:** Present the current T&C, record the partner's explicit acceptance with version and timestamp, and block progress until accepted.
+**Objective:** Present the current T&C version, record the partner's explicit acceptance with version and timestamp, and block progress until accepted.
 
 **Explain Like I'm 10:**
 Before playing any game, you read the rules and say "I agree." This module is the rulebook. Rules can change over time, so it tracks every version, shows the latest, and records exactly when you agreed. If rules change later, Wiom knows which version you signed.
 
 **IS Responsible For:**
-- Maintain T&C version registry (version, content/link, created timestamp)
-- Serve the latest T&C for display
+- Maintain a T&C version registry (version, content/link, created timestamp)
+- Serve the current T&C version for display
 - Record acceptance per partner (version accepted, timestamp)
 - Store full acceptance history (append-only)
-- Provide "has this partner accepted latest T&C?" check to other modules
+- Provide a check for other modules: "Has this partner accepted the latest T&C?"
 - Block forward progress until accepted
 
 **Is NOT Responsible For:**
-- Drafting T&C content (→ Legal/Compliance)
+- Drafting or authoring T&C content (→ Legal/Compliance)
 - Authentication (→ M1)
 - Collecting personal details (→ M3)
 - Enforcing T&C terms post-onboarding (→ operational systems)
@@ -143,7 +136,7 @@ Before playing any game, you read the rules and say "I agree." This module is th
 - Let a partner proceed to M3 without recorded acceptance
 - Modify or interpret T&C content — store and serve only
 - Delete past acceptance records — append-only audit trail
-- Pre-check the checkbox for the partner
+- Pre-check the acceptance on behalf of the partner
 
 **Dependencies:**
 
@@ -173,26 +166,26 @@ Before playing any game, you read the rules and say "I agree." This module is th
 Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'm in Indore, here's my address." Wiom needs this to send equipment, show your shop to customers, and match your name against your ID documents later. It's like filling a membership form — name, address, shop type.
 
 **IS Responsible For:**
-- Collect: Full Name (as per Aadhaar), Email, Entity Type, Business Name
-- Collect: State, City, Pincode, Full Address, GPS coordinates
-- Validate all fields (format, required, completeness)
+- Collect personal identity details (name, contact information)
+- Collect business details (entity type, business/trade name)
+- Collect business location (address, geo-coordinates)
+- Validate all fields as per configured rules
 - Receive verified phone number from M1
-- Provide profile data as read-only reference to M4, M5, M6, M7
-- Lock Business Name after M4 confirms Rs.2K payment
+- Provide profile data as read-only reference to downstream modules
+- Lock business/trade name after registration fee is paid (triggered by M4)
 
 **Is NOT Responsible For:**
-- Identity verification against government databases (→ M5)
+- Verifying identity against government databases (→ M5)
 - Payments (→ M4)
 - Phone/OTP verification (→ M1)
 - T&C (→ M2)
-- KYC, bank, or document collection (→ M5)
+- Document collection or KYC (→ M5)
 
 **Must NEVER:**
 - Allow progress to M4 with any required field empty
 - Modify the verified phone number from M1
 - Perform KYC verification or collect documents
-- Accept entity types other than Proprietorship (current version)
-- Allow Business Name edits after Rs.2K is paid
+- Allow business/trade name edits after registration fee is paid
 
 **Dependencies:**
 
@@ -205,8 +198,8 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 | Depended On By | Why |
 |----------------|-----|
-| M4 — Fee Collection | Needs Business Name; triggers trade name lock |
-| M5 — Verification | References Name, Business Name for cross-checking |
+| M4 — Fee Collection | Needs profile data; triggers trade name lock |
+| M5 — Verification | References profile for document cross-checking |
 | M7 — Account Setup | Uses full profile for backend accounts |
 
 | Must NOT Depend On |
@@ -219,50 +212,50 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 📄 **Detail doc:** [`M4_FEE.md`](M4_FEE.md)
 
-**Objective:** Collect payments at two points — Rs.2,000 (refundable, Phase 1) and Rs.20,000 (non-refundable, Phase 3). Handle success, failure, timeout, and refunds.
+**Objective:** Collect fees from the partner at configured checkpoints in the journey. Handle payment success, failure, timeout, and refunds.
 
 **Explain Like I'm 10:**
-Joining the Wiom club costs money. First you pay Rs.2,000 as a "serious applicant" deposit — if Wiom says no, you get it back. If you pass all checks, you pay Rs.20,000 to become a real partner and get WiFi equipment. This module is the cashier: takes money, gives receipts, and returns money if needed.
+Joining the Wiom club costs money — paid in stages. First a registration deposit (refundable if Wiom says no), then a final onboarding fee once you pass all checks. This module is the cashier: takes money, gives receipts, and returns money if needed. It doesn't decide the amounts or when refunds happen — it just executes.
 
 **IS Responsible For:**
-- Present Rs.2K payment screen (Phase 1) and Rs.20K payment screen (Phase 3)
-- Display investment summary (Rs.2K paid + Rs.20K due = Rs.22K)
-- Initiate transactions via payment gateway
-- Handle payment success, failure, timeout
-- Process refunds when triggered by M5 (verification rejected)
-- Show refund status (Success / In Progress / Failed)
-- Trigger trade name lock in M3 after Rs.2K payment
-- Manage payment reminder nudges (Day 1-4)
+- Present fee payment screens at configured checkpoints
+- Display investment summary (what's paid, what's due)
+- Initiate payment transactions via payment gateway
+- Handle payment success, failure, and timeout states
+- Process refunds when triggered by upstream modules
+- Show refund status to the partner
+- Trigger post-payment actions in other modules (e.g., trade name lock after registration fee)
+- Manage payment reminder nudges for pending payments
 
 **Is NOT Responsible For:**
-- Deciding whether a refund should happen (→ M5 decides)
+- Deciding whether a refund should happen (→ triggered by M5)
 - Collecting partner information (→ M1, M2, M3)
 - Document verification (→ M5)
-- Determining payment amounts — these are business constants
+- Determining fee amounts or refund policies — these are business configurations
 
 **Must NEVER:**
-- Initiate payment without prerequisite modules completed
+- Initiate payment without prerequisite module completions
 - Store PCI-sensitive data (card numbers, CVV) on client
-- Modify payment amounts (Rs.2K and Rs.20K are constants)
-- Process a refund without M5's rejection trigger
-- Auto-retry payment without explicit partner tap
+- Modify fee amounts — these are business-configured constants
+- Process a refund on its own authority — only on upstream trigger
+- Auto-retry payment without explicit partner action
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
 | M3 — Registration Service | Partner profile for payment screens |
-| M5 — Verification Service | For Rs.20K: verification approved + tech passed. For refunds: rejection trigger |
-| M6 — CSP Policy Service | Policy accepted before Rs.20K payment |
-| Razorpay (3P) | Process payments and refunds |
+| M5 — Verification Service | For onboarding fee: verification + assessment must pass. For refunds: rejection trigger |
+| M6 — CSP Policy Service | Policy accepted before onboarding fee |
+| Payment Gateway (3P) | Process payments and refunds |
 | Wiom Ledger / Finance Service (Internal) | Record transactions |
 | Wiom Notification Service (Internal) | Confirmations, reminders, refund updates |
 
 | Depended On By | Why |
 |----------------|-----|
-| M5 — Verification Service | Phase 2 starts after Rs.2K confirmed |
-| M7 — Account Setup | Starts after Rs.20K confirmed |
-| M3 — Registration Service | Trade name lock after Rs.2K |
+| M5 — Verification Service | Verification phase starts after registration fee confirmed |
+| M7 — Account Setup | Starts after onboarding fee confirmed |
+| M3 — Registration Service | Trade name lock after registration fee |
 
 | Must NOT Depend On |
 |---------------------|
@@ -274,59 +267,58 @@ Joining the Wiom club costs money. First you pay Rs.2,000 as a "serious applican
 
 📄 **Detail doc:** [`M5_VERIFICATION_ASSESSMENT.md`](M5_VERIFICATION_ASSESSMENT.md)
 
-**Objective:** Collect all documents, run checks, facilitate human QA review, and conduct technical assessment. This is the gatekeeper — it decides whether a partner qualifies.
+**Objective:** Collect all required documents, run configured checks, facilitate human QA review, and conduct technical assessment. This is the gatekeeper — it determines whether a partner qualifies.
 
 **Explain Like I'm 10:**
-You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like trying out for a cricket team. Show your ID card (KYC), bank passbook, your contract with the stadium (ISP agreement), and photos of your gear and ground. A review team checks everything. If approved, a technical team checks if your ground is good enough. Only if BOTH pass do you move forward. Documents fail → money back. Technical fails → no refund.
+You've told Wiom your name and paid your deposit. Now they check if you're the real deal — like trying out for a cricket team. Show your ID cards, bank proof, your agreement with the internet company, and photos of your shop and equipment. A review team checks everything. If approved, a technical team checks if your setup is good enough. Only if BOTH pass do you move forward. Documents fail → deposit back. Technical fails → no refund.
 
 **IS Responsible For:**
-- KYC collection: PAN, Aadhaar, GST numbers + document uploads + regex validation on blur
-- KYC cross-validation: GST chars 3-12 must match PAN
-- Bank details: Account Number, Re-enter, IFSC + dedup check + mandatory bank document upload
-- ISP Agreement: multi-page upload (PDF + up to 7 photos)
-- Shop & Equipment Photos: shop front (1) + equipment (up to 5)
-- Sample documents for all upload screens
-- Verification status display and document checklist
-- Send data to QA Review Dashboard, receive approved/rejected decisions
+- Collect KYC identity documents (numbers + uploads) as per configured document list
+- Run validation and cross-checks on submitted data
+- Collect bank account details and run dedup checks
+- Collect mandatory bank proof document
+- Collect business agreement documents (multi-page upload support)
+- Collect shop and equipment photos
+- Provide sample/reference documents for all upload stages
+- Display document submission status and checklist
+- Send submitted data to QA review team and receive approved/rejected decisions
 - Trigger refund in M4 on verification rejection
-- Technical assessment: infrastructure, network, location feasibility
-- Handle tech assessment passed/rejected outcomes
+- Facilitate technical assessment of partner's infrastructure and location
+- Handle assessment passed/rejected outcomes
 
 **Is NOT Responsible For:**
-- Processing payments or refunds (→ M4, this module only triggers the signal)
+- Processing payments or refunds (→ M4; this module only sends the trigger)
 - Authentication (→ M1)
-- Collecting personal/business info (→ M3, reads as reference only)
-- Presenting policies (→ M6)
+- Collecting personal/business profile info (→ M3; reads as reference only)
+- Presenting policies or terms (→ M6)
 - Creating backend accounts (→ M7)
 - Making QA decisions — it facilitates human reviewers only
 
 **Must NEVER:**
-- Auto-approve or auto-reject — all QA decisions are human
-- Let a partner proceed to Phase 3 without QA approval
-- Let a partner pass tech assessment without a "passed" outcome
+- Auto-approve or auto-reject — all QA decisions must be human
+- Let a partner proceed to activation without QA approval
+- Let a partner pass technical assessment without a confirmed "passed" outcome
 - Process or hold any payment
-- Allow re-upload after verification rejection in Phase 1
-- Skip bank dedup check on "Add Bank Document" tap
-- Skip mandatory bank document upload
+- Modify partner profile data owned by M3
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
-| M3 — Registration Service | Partner Name, Business Name for cross-referencing |
-| M4 — Fee Collection | Phase 2 starts after Rs.2K confirmed |
-| Wiom User Registry (Internal) | Bank account dedup check |
+| M3 — Registration Service | Partner profile for document cross-referencing |
+| M4 — Fee Collection | Verification phase starts after registration fee confirmed |
+| Wiom User Registry (Internal) | Dedup checks |
 | Wiom Document Storage (Internal) | Store uploaded documents |
 | Wiom QA Review Dashboard (Internal) | Send data for review, receive decisions |
 | Wiom Technical Assessment Service (Internal) | Request and receive assessment |
 | Wiom Notification Service (Internal) | Status updates, decisions, results |
-| KYC Verification APIs (3P) — Future | Real PAN/Aadhaar/GST verification (deferred; regex only now) |
-| Bank Verification / Penny Drop (3P) — Future | Real bank verification (deferred) |
+| KYC Verification APIs (3P) — Future | Real identity document verification |
+| Bank Verification API (3P) — Future | Real bank account verification |
 
 | Depended On By | Why |
 |----------------|-----|
-| M4 — Fee Collection | Verification approved + tech passed enables Rs.20K; rejection triggers refund |
-| M6 — CSP Policy | Presented only after tech assessment passed |
+| M4 — Fee Collection | Verification + assessment outcomes gate the onboarding fee; rejection triggers refund |
+| M6 — CSP Policy | Presented only after assessment passed |
 
 | Must NOT Depend On |
 |---------------------|
@@ -338,27 +330,28 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 
 📄 **Detail doc:** [`M6_CSP_POLICY.md`](M6_CSP_POLICY.md)
 
-**Objective:** Present Wiom's business policies, SLA, commission structure, and payout schedule. Record the partner's explicit acceptance before final payment.
+**Objective:** Present Wiom's business policies, SLA terms, commission structure, and payout schedule. Record the partner's explicit acceptance before the final fee payment.
 
 **Explain Like I'm 10:**
-You passed all checks. Before you pay the final amount, Wiom says: "Here's how this works" — like a job offer letter. How much you'll earn (Rs.300 per connection, Rs.300 per recharge), when you'll get paid (every Monday), and what you must maintain (fix complaints fast, keep internet running, take care of equipment). You say "samajh gaya" (understood), and that's recorded.
+You passed all checks. Before you pay the final amount, Wiom says: "Here's how this partnership works" — like a job offer letter. How much you'll earn, when you'll get paid, and what you must maintain. You say "samajh gaya" (understood), and that agreement is recorded forever.
 
 **IS Responsible For:**
-- Present commission structure, payout schedule, SLA requirements
-- Record partner's explicit acceptance ("Understood, proceed")
+- Present configured commission structure and payout schedule
+- Present service level requirements the partner must maintain
+- Record partner's explicit acceptance
 - Maintain policy versions and track which version was accepted and when
-- Confirm to M4 that policy is accepted (enabling Rs.20K payment)
+- Confirm to M4 that policy is accepted (enabling onboarding fee payment)
 
 **Is NOT Responsible For:**
 - Enforcing SLA compliance post-onboarding (→ operational systems)
 - Processing payouts or commissions (→ Wiom Payout Service)
-- Collecting documents or info (→ M5, M3)
-- Tech assessment (→ M5)
-- Processing Rs.20K payment (→ M4)
+- Collecting documents or personal info (→ M5, M3)
+- Technical assessment (→ M5)
+- Processing payments (→ M4)
 
 **Must NEVER:**
-- Let a partner proceed to Rs.20K payment without recorded acceptance
-- Modify commission or SLA values — served from configuration
+- Let a partner proceed to onboarding fee without recorded acceptance
+- Modify policy values — these are served from configuration
 - Pre-accept on behalf of the partner
 - Delete past acceptance records — append-only
 
@@ -366,13 +359,13 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 
 | Depends On | Why |
 |------------|-----|
-| M5 — Verification Service | Presented only after verification approved + tech passed |
+| M5 — Verification Service | Presented only after verification approved + tech assessment passed |
 | Wiom CMS / Policy Config (Internal) | Fetch policy content, rates, terms |
 | Wiom Partner Database (Internal) | Store acceptance records |
 
 | Depended On By | Why |
 |----------------|-----|
-| M4 — Fee Collection | Rs.20K enabled only after policy accepted |
+| M4 — Fee Collection | Onboarding fee enabled only after policy accepted |
 
 | Must NOT Depend On |
 |---------------------|
@@ -384,43 +377,42 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 
 📄 **Detail doc:** [`M7_CSP_ACCOUNT_SETUP.md`](M7_CSP_ACCOUNT_SETUP.md)
 
-**Objective:** Create the partner's operational accounts across all backend systems and confirm onboarding completion.
+**Objective:** Create the partner's operational accounts across all required backend systems and confirm onboarding completion.
 
 **Explain Like I'm 10:**
-You did everything — verified, documents checked, money paid. Now Wiom sets up your "shop" in their system. Like a school creating your student account after admission — login, class, report card, library card. This module creates your payment account, registers you in the CRM, sets up your earnings tracker, and shows a big "Congratulations!" screen with instructions to download the Wiom Partner Plus app.
+You did everything — verified, checked, paid. Now Wiom sets up your "shop" in their system. Like a school creating your student account after admission — login, report card, library card. This module creates your payment account, registers you in the support system, sets up your earnings tracker, and shows a big "Congratulations!" with instructions on what to do next.
 
 **IS Responsible For:**
-- Create payout account (for commissions)
-- Register partner in CRM
-- Set up financial ledger
-- Auto-progress loading (3 seconds)
-- Handle setup failure and pending states
-- Show "Successfully Onboarded" screen + download link + instructions
-- Mark onboarding journey as complete
+- Create partner's payout/fund account for receiving commissions
+- Register partner in CRM/support system
+- Set up partner's financial ledger
+- Handle setup progress, failure, and pending states
+- Present onboarding success confirmation with next steps
+- Mark the onboarding journey as complete
 
 **Is NOT Responsible For:**
 - Collecting any partner data (reads from M3, M5)
 - Processing payments (→ M4)
 - Document verification (→ M5)
-- T&C or Policy presentation (→ M2, M6)
-- The Wiom Partner Plus App itself (links to it, doesn't build it)
+- T&C or policy presentation (→ M2, M6)
+- The partner-facing operational app itself (links to it, doesn't own it)
 
 **Must NEVER:**
-- Begin without confirmed Rs.20K from M4
-- Modify data collected by M1, M2, M3, M5
-- Skip any backend registration (payout + CRM + ledger must all succeed)
-- Show "Successfully Onboarded" if any setup step failed
+- Begin without confirmed onboarding fee from M4
+- Modify data collected by other modules
+- Skip any required backend registration — all must succeed
+- Show success if any setup step has failed
 - Allow backward edits after setup begins
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
-| M4 — Fee Collection | Starts after Rs.20K confirmed |
+| M4 — Fee Collection | Starts after onboarding fee confirmed |
 | M3 — Registration Service | Reads full partner profile |
 | M5 — Verification Service | Reads verified bank details for payout setup |
-| RazorpayX (3P) | Create partner payout/fund account |
-| Zoho CRM (3P) | Register partner in CRM |
+| Payout Infrastructure (3P) | Create partner fund account |
+| CRM System (3P) | Register partner |
 | Wiom Ledger / Finance Service (Internal) | Create financial ledger |
 | Wiom Notification Service (Internal) | Onboarding success notification |
 
@@ -437,38 +429,38 @@ You did everything — verified, documents checked, money paid. Now Wiom sets up
 ## 5. Inter-Module Dependency Map
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                  ONBOARDING FLOW DIRECTION →                  │
-│                                                              │
-│  ┌──────┐   ┌──────┐   ┌──────┐   ┌──────┐                  │
-│  │  M1  │──▶│  M2  │──▶│  M3  │──▶│  M4  │ (Rs.2K)          │
-│  │ Auth │   │ TnC  │   │ Reg  │   │ Fee  │                  │
-│  └──────┘   └──────┘   └──────┘   └──┬───┘                  │
-│                                      │                       │
-│                                      ▼                       │
-│                                 ┌──────┐                     │
-│                                 │  M5  │                     │
-│                                 │V & A │                     │
-│                                 └──┬───┘                     │
-│                                    │                         │
-│                          ┌─────────┴────────┐                │
-│                          ▼                  ▼                │
-│                     [Approved]         [Rejected]            │
-│                          │             → Refund (M4)         │
-│                          ▼               END                 │
-│                    [Tech Passed]                             │
-│                          │                                   │
-│                          ▼                                   │
-│                     ┌──────┐   ┌──────┐   ┌──────┐           │
-│                     │  M6  │──▶│  M4  │──▶│  M7  │           │
-│                     │Policy│   │(Rs20K)│   │Setup │           │
-│                     └──────┘   └──────┘   └──────┘           │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                  ONBOARDING FLOW DIRECTION →                      │
+│                                                                  │
+│  ┌──────┐   ┌──────┐   ┌──────┐   ┌──────────┐                  │
+│  │  M1  │──▶│  M2  │──▶│  M3  │──▶│    M4    │                  │
+│  │ Auth │   │ TnC  │   │ Reg  │   │Fee (Reg) │                  │
+│  └──────┘   └──────┘   └──────┘   └────┬─────┘                  │
+│                                        │                         │
+│                                        ▼                         │
+│                                   ┌──────┐                       │
+│                                   │  M5  │                       │
+│                                   │V & A │                       │
+│                                   └──┬───┘                       │
+│                                      │                           │
+│                            ┌─────────┴────────┐                  │
+│                            ▼                  ▼                  │
+│                       [Approved]         [Rejected]              │
+│                            │             → Refund (M4)           │
+│                            ▼               END                   │
+│                      [Tech Passed]                               │
+│                            │                                     │
+│                            ▼                                     │
+│  ┌──────┐   ┌──────────┐   ┌──────┐                              │
+│  │  M6  │──▶│    M4    │──▶│  M7  │                              │
+│  │Policy│   │Fee (Onb) │   │Setup │                              │
+│  └──────┘   └──────────┘   └──────┘                              │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 **Key points:**
-- **M4 is invoked twice** — Rs.2K (Phase 1) and Rs.20K (Phase 3)
+- **M4 is invoked twice** — registration fee (Phase 1) and onboarding fee (Phase 3)
 - **M5 has two branch points** — QA review + technical assessment
 - **M5 → M4 reverse flow** — rejection triggers refund
 - **M7 is terminal** — nothing depends on it
@@ -484,13 +476,13 @@ You did everything — verified, documents checked, money paid. Now Wiom sets up
 | M1 → M2 | Auth completes before T&C |
 | M1 → M3 | Verified phone passed as identity anchor |
 | M2 → M3 | T&C accepted before registration |
-| M3 → M4 | Profile data enables Rs.2K payment |
-| M4 → M3 | Rs.2K triggers trade name lock |
-| M4 → M5 | Rs.2K confirmed unlocks Phase 2 |
+| M3 → M4 | Profile data enables registration fee payment |
+| M4 → M3 | Registration fee triggers trade name lock |
+| M4 → M5 | Registration fee confirmed unlocks verification phase |
 | M5 → M4 | Rejection triggers refund |
 | M5 → M6 | Approved + tech passed unlocks policy |
-| M6 → M4 | Policy accepted enables Rs.20K |
-| M4 → M7 | Rs.20K confirmed unlocks account setup |
+| M6 → M4 | Policy accepted enables onboarding fee |
+| M4 → M7 | Onboarding fee confirmed unlocks account setup |
 | M3 → M7 | Profile read for backend accounts |
 | M5 → M7 | Bank details read for payout setup |
 
@@ -506,7 +498,7 @@ You did everything — verified, documents checked, money paid. Now Wiom sets up
 | M3 | Partner Database | Partner profile |
 | M4 | Ledger / Finance Service | Payment/refund records |
 | M4 | Notification Service | Confirmations, reminders |
-| M5 | User Registry | Bank dedup check |
+| M5 | User Registry | Dedup checks |
 | M5 | Document Storage | Uploaded documents |
 | M5 | QA Review Dashboard | Review data, receive decisions |
 | M5 | Technical Assessment Service | Assessment requests/results |
@@ -516,16 +508,16 @@ You did everything — verified, documents checked, money paid. Now Wiom sets up
 | M7 | Ledger / Finance Service | Partner financial ledger |
 | M7 | Notification Service | Onboarding success notification |
 
-### Module → Third-Party Vendors
+### Module → Third-Party Integrations
 
-| Module | Vendor | Purpose | Status |
-|--------|--------|---------|--------|
-| M1 | SMS/WhatsApp OTP Gateway | Send OTP | Production required |
-| M4 | Razorpay | Payments and refunds | Production required |
-| M5 | KYC Verification API | PAN/Aadhaar/GST verification | Deferred (regex only now) |
-| M5 | Bank Verification / Penny Drop | Bank account verification | Deferred (simulated now) |
-| M7 | RazorpayX | Partner payout account | Production required |
-| M7 | Zoho CRM | Partner CRM registration | Production required |
+| Module | Integration | Purpose |
+|--------|------------|---------|
+| M1 | OTP Gateway | Send OTP |
+| M4 | Payment Gateway | Process payments and refunds |
+| M5 | KYC Verification API (Future) | Identity document verification |
+| M5 | Bank Verification API (Future) | Bank account verification |
+| M7 | Payout Infrastructure | Partner fund account creation |
+| M7 | CRM System | Partner registration |
 
 ---
 
@@ -548,11 +540,11 @@ PARTNER OPENS APP
   └────┬────┘
        ▼
   ┌─────────┐
-  │   M4    │  Pay Rs.2,000 → Lock trade name
+  │   M4    │  Pay registration fee → Lock trade name
   └────┬────┘
        ▼
   ┌─────────┐
-  │   M5    │  KYC → Bank → ISP → Photos → QA Review
+  │   M5    │  Documents → QA Review
   │         │     ├── REJECTED → Refund (M4) → END
   │         │     └── APPROVED → Tech Assessment
   │         │           ├── REJECTED → No refund → END
@@ -564,7 +556,7 @@ PARTNER OPENS APP
   └────┬────┘
        ▼
   ┌─────────┐
-  │   M4    │  Pay Rs.20,000
+  │   M4    │  Pay onboarding fee
   └────┬────┘
        ▼
   ┌─────────┐
@@ -582,13 +574,13 @@ These concerns are cross-cutting — they apply to **every module**. Implementat
 
 | # | Concern | Rule |
 |---|---------|------|
-| 1 | **Language Toggle** | All text defaults to Hindi with runtime toggle to English. Preference persists across screens. |
-| 2 | **Network/Server Errors** | "No Internet" and "Server Error" overlays can appear on any screen. Blocking until resolved. No data loss. |
-| 3 | **"Talk to Us" Support** | Phone: 7836811111. Tappable. Appears on payment failures, rejections, setup errors. Production: from config, not hardcoded. |
-| 4 | **State Persistence** | All entered data survives back/forward navigation. Production: Room + DataStore, not in-memory. |
-| 5 | **No-Blame Errors** | Never blame the user. Reassure ("Don't worry"). Suggest next action, don't describe failure technically. |
-| 6 | **Trust Indicators** | Lock icons, verification badges, "Refundable" tags where relevant. |
-| 7 | **Design System** | Primary `#D9008D`, radii 8/12/16/888dp, full token set in PRD §12. |
+| 1 | **Language Toggle** | All text defaults to the primary language with runtime toggle to secondary. Preference persists across screens. |
+| 2 | **Network/Server Errors** | Connectivity and server error overlays can appear on any screen. Blocking until resolved. No data loss. |
+| 3 | **Support Channel** | A "Talk to Us" contact point appears on failures, rejections, and setup errors. Production: served from config, not hardcoded. |
+| 4 | **State Persistence** | All entered data survives back/forward navigation. Production: persisted to durable storage, not in-memory. |
+| 5 | **No-Blame Errors** | Never blame the user. Reassure. Suggest next action, don't describe failure technically. |
+| 6 | **Trust Indicators** | Security icons, verification badges, and refund tags appear where relevant to build confidence. |
+| 7 | **Design System** | All modules follow the Wiom design token set (colours, radii, typography) as defined in the PRD. |
 | 8 | **Audit Trail** | Every module logs: partner ID, module ID, event type, timestamp. Append-only. No deletion. |
 | 9 | **Session Management** | All modules operate within M1's authenticated session. Expired session → re-auth via M1, no data loss. |
 | 10 | **Data Privacy** | PII encrypted at rest and in transit. Access is role-based and logged. No sharing outside declared dependencies. |
@@ -599,18 +591,15 @@ These concerns are cross-cutting — they apply to **every module**. Implementat
 
 | Term | Definition |
 |------|-----------|
-| **CSP** | Channel Sales Partner — local entrepreneur who partners with Wiom to sell internet |
-| **KYC** | Know Your Customer — identity verification via PAN, Aadhaar, GST |
-| **Dedup** | Deduplication — checking if a value (phone, bank account) is already registered |
+| **CSP** | Connection Service Provider — local entrepreneur who partners with Wiom to provide internet services |
+| **KYC** | Know Your Customer — identity verification using government-issued documents |
+| **Dedup** | Deduplication — checking if a value (phone, bank account, identity number) is already registered |
 | **OTP** | One-Time Password — temporary code to verify phone ownership |
-| **PAN** | Permanent Account Number — tax ID (10 characters) |
-| **Aadhaar** | Indian unique identity number (12 digits) |
-| **GST** | Goods and Services Tax ID (15 characters) |
-| **IFSC** | Indian Financial System Code — bank branch identifier (11 characters) |
 | **ISP** | Internet Service Provider — company whose internet the CSP resells |
 | **SLA** | Service Level Agreement — performance standards the CSP must maintain |
 | **TAT** | Turn Around Time — expected duration for a process |
 | **PII** | Personally Identifiable Information |
+| **CRM** | Customer Relationship Management system |
 
 ---
 
