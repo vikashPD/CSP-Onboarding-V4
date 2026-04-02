@@ -46,7 +46,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 
 | ID | Formal Name | Phase(s) | One-Line Purpose |
 |----|-------------|----------|------------------|
-| **M1** | Authentication | Phase 1 | Verify partner's mobile number via OTP and establish identity |
+| **M1** | Authentication | Phase 1 | Verify the partner owns a unique identity and establish an authenticated session |
 | **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance |
 | **M3** | Registration | Phase 1 | Collect personal, business, and location details |
 | **M4** | Fee Collection | Phase 1, 3 | Collect configured fees at defined checkpoints, handle refunds |
@@ -66,17 +66,18 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 
 📄 **Detail doc:** [`M1_AUTH.md`](M1_AUTH.md)
 
-**Objective:** Verify that the partner owns a real, unique mobile number before anything else happens.
+**Objective:** Verify that the partner owns a unique identity and establish an authenticated session before anything else happens.
 
 **Explain Like I'm 10:**
-Before joining the Wiom shopkeeper club, you prove you have a real phone number. The app sends a secret code, you type it back. If it matches — you're in. If that number is already taken — sorry, one person, one number. That's all this module does: check your phone, check the code, open the door.
+Before joining the Wiom shopkeeper club, you prove who you are. The app checks your identity using a verification method — if it matches, you're in. If someone else already joined with that identity, the app says "already taken" — because one person, one identity, one partnership. That's all this module does: check who you are, verify it's really you, and open the door.
 
 **IS Responsible For:**
-- Capture and validate partner's mobile number
-- Check if the number is already registered (duplicate check)
-- Send OTP, verify OTP, manage OTP lifecycle (expiry, resend, attempt limits)
+- Capture and validate the partner's identity credential
+- Check if the identity is already registered (duplicate check)
+- Perform identity verification (e.g., OTP, email link, or other configured method)
+- Manage verification lifecycle (expiry, resend, attempt limits)
 - Establish an authenticated session
-- Pass the verified phone number to downstream modules
+- Pass the verified identity to downstream modules
 
 **Is NOT Responsible For:**
 - Collecting personal or business details (→ M3)
@@ -85,23 +86,23 @@ Before joining the Wiom shopkeeper club, you prove you have a real phone number.
 - Document or KYC handling (→ M5)
 
 **Must NEVER:**
-- Store OTPs in plain text or client-side
-- Allow unlimited wrong OTP attempts
-- Let anyone bypass OTP verification to proceed
-- Let a duplicate phone number proceed
+- Store verification secrets in plain text or client-side
+- Allow unlimited wrong verification attempts
+- Let anyone bypass identity verification to proceed
+- Let a duplicate identity proceed
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
-| OTP Gateway (3P) | Send OTP |
-| Wiom User Registry (Internal) | Phone duplicate check |
+| Identity Verification Provider (3P) | Send and verify identity credentials |
+| Wiom User Registry (Internal) | Duplicate identity check |
 | Session Management (Internal) | Create authenticated session |
 
 | Depended On By | Why |
 |----------------|-----|
-| M2 — Terms & Conditions | Needs verified phone before showing T&C |
-| M3 — Registration | Receives verified phone as identity anchor |
+| M2 — Terms & Conditions | Needs verified identity before showing T&C |
+| M3 — Registration | Receives verified identity as anchor |
 
 | Must NOT Depend On |
 |---------------------|
@@ -170,20 +171,20 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 - Collect business details (entity type, business/trade name)
 - Collect business location (address, geo-coordinates)
 - Validate all fields as per configured rules
-- Receive verified phone number from M1
+- Receive verified identity from M1
 - Provide profile data as read-only reference to downstream modules
 - Lock business/trade name after registration fee is paid (triggered by M4)
 
 **Is NOT Responsible For:**
 - Verifying identity against government databases (→ M5)
 - Payments (→ M4)
-- Phone/OTP verification (→ M1)
+- Identity verification or authentication (→ M1)
 - T&C (→ M2)
 - Document collection or KYC (→ M5)
 
 **Must NEVER:**
 - Allow progress to M4 with any required field empty
-- Modify the verified phone number from M1
+- Modify the verified identity from M1
 - Perform KYC verification or collect documents
 - Allow business/trade name edits after registration fee is paid
 
@@ -191,7 +192,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 | Depends On | Why |
 |------------|-----|
-| M1 — Authentication | Verified phone as identity anchor |
+| M1 — Authentication | Verified identity as anchor |
 | M2 — Terms & Conditions | T&C must be accepted first |
 | Wiom Geo/Location Service (Internal) | GPS capture, location validation |
 | Wiom Partner Database (Internal) | Store partner profile |
@@ -474,7 +475,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | From → To | Purpose |
 |-----------|---------|
 | M1 → M2 | Auth completes before T&C |
-| M1 → M3 | Verified phone passed as identity anchor |
+| M1 → M3 | Verified identity passed as anchor |
 | M2 → M3 | T&C accepted before registration |
 | M3 → M4 | Profile data enables registration fee payment |
 | M4 → M3 | Registration fee triggers trade name lock |
@@ -490,7 +491,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 
 | Module | Internal Service | Purpose |
 |--------|-----------------|---------|
-| M1 | User Registry | Phone duplicate check |
+| M1 | User Registry | Identity duplicate check |
 | M1 | Session Management | Authenticated session |
 | M2 | CMS / Legal Content | T&C versions and content |
 | M2 | Partner Database | Acceptance records |
@@ -512,7 +513,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 
 | Module | Integration | Purpose |
 |--------|------------|---------|
-| M1 | OTP Gateway | Send OTP |
+| M1 | Identity Verification Provider | Verify partner identity |
 | M4 | Payment Gateway | Process payments and refunds |
 | M5 | KYC Verification API (Future) | Identity document verification |
 | M5 | Bank Verification API (Future) | Bank account verification |
@@ -528,7 +529,7 @@ PARTNER OPENS APP
        │
        ▼
   ┌─────────┐
-  │   M1    │  Verify phone + OTP
+  │   M1    │  Verify identity + Authenticate
   └────┬────┘
        ▼
   ┌─────────┐
