@@ -114,10 +114,10 @@ Before joining the Wiom shopkeeper club, you prove who you are. The app checks y
 
 📄 **Detail doc:** [`M2_TNC.md`](M2_TNC.md)
 
-**Objective:** Manage the complete T&C lifecycle — versions, presentation, and acceptance tracking — across both the onboarding flow and the Wiom Partner BAU app.
+**Objective:** Manage the complete T&C lifecycle — versions, presentation, acceptance tracking, and future addendums — across both the onboarding flow and the Wiom Partner BAU app.
 
 **Explain Like I'm 10:**
-Before playing any game, you read the rules and say "I agree." This module is the rulebook. Rules can change over time, so it tracks every version, shows the latest, and records exactly when you agreed. But the rulebook doesn't retire after onboarding — even after you're a partner, if Wiom updates the rules, the Partner app shows you the new version and asks you to agree again. This module handles both: the first-time agreement during onboarding AND any future re-agreements in the live app.
+Before playing any game, you read the rules and say "I agree." This module is the rulebook. Rules can change over time, so it tracks every version, shows the latest, and records exactly when you agreed. After onboarding, the Partner app can show you which rules you agreed to. And if Wiom adds new rules or changes later, the Partner app is where you'll see and accept those updates. This module handles it all: first-time agreement during onboarding, showing what was accepted, and any future addendums in the BAU app.
 
 **IS Responsible For:**
 - Maintain a T&C version registry (version, content/link, created timestamp)
@@ -126,7 +126,8 @@ Before playing any game, you read the rules and say "I agree." This module is th
 - Store full acceptance history (append-only)
 - Provide a check for other modules/apps: "Has this partner accepted the latest T&C?"
 - Block forward progress during onboarding until accepted
-- Serve T&C to the Wiom Partner BAU app for post-onboarding re-acceptance when T&C is updated
+- Serve accepted T&C to the Wiom Partner BAU app for viewing
+- Handle any future T&C updates or addendums via the BAU app
 
 **Is NOT Responsible For:**
 - Drafting or authoring T&C content (→ Legal/Compliance)
@@ -151,7 +152,7 @@ Before playing any game, you read the rules and say "I agree." This module is th
 | Depended On By | Why |
 |----------------|-----|
 | M3 — Registration | Cannot begin until T&C accepted |
-| Wiom Partner BAU App | Serves T&C for post-onboarding re-acceptance on version updates |
+| Wiom Partner BAU App | Serves accepted T&C for viewing; handles future T&C updates and addendums |
 
 | Must NOT Depend On |
 |---------------------|
