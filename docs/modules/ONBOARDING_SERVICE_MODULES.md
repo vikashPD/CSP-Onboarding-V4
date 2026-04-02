@@ -1,6 +1,6 @@
 # Wiom CSP Onboarding Service — Module Architecture Document
 
-**Version:** 1.2 | **Date:** 02 April 2026 | **Status:** Production Specification
+**Version:** 2.0 | **Date:** 02 April 2026 | **Status:** Production Specification
 **Parent PRD:** [PRD_HUMAN.md v3.2](../PRD_HUMAN.md)
 **Audience:** Product, Engineering, QA, Business Stakeholders, External Vendors
 
@@ -51,7 +51,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 | **M3** | Registration | Phase 1 | Collect personal, business, and location details |
 | **M4** | Fee Collection | Phase 1, 3 | Configure fee types, values, and checkpoints; connect to PG for execution; ensure financial reconciliation |
 | **M5** | Verification & Assessment | Phase 2, 3 | Verify personal, business, financial, and operational credentials; facilitate QA review and tech assessment |
-| **M6** | CSP Policy | Phase 3 | Present policies, SLA, commissions; record acceptance |
+| **M6** | CSP Policy | Phase 3 | Present policies, SLA, commissions; record acceptance — serves both onboarding and Partner BAU app |
 | **M7** | CSP Account Setup | Phase 3 | Create backend accounts, confirm onboarding |
 
 ---
@@ -222,7 +222,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 **Objective:** Configure fee types, fee values, and payment checkpoints for the onboarding journey. Connect to payment layers for transaction execution and ensure complete financial reconciliation.
 
 **Explain Like I'm 10:**
-Joining the Wiom club costs money — paid in stages. This module is the price list and the accountant's ledger — it decides what fees exist, how much each one costs, and at which step in the journey they must be paid. When it's time to actually collect the money, it hands the job to a payment system (like Razorpay). When a refund needs to happen, the payment system handles that too. This module's job is to make sure every rupee is tracked — what was charged, what was paid, what was refunded — so the books always balance.
+Joining the Wiom club costs money — paid in stages. This module is the price list and the accountant's ledger — it decides what fees exist, how much each one costs, and at which step in the journey they must be paid. When it's time to actually collect the money, it hands the job to a payment system. When a refund needs to happen, the payment system handles that too. This module's job is to make sure every rupee is tracked — what was charged, what was paid, what was refunded — so the books always balance.
 
 **IS Responsible For:**
 - Configure fee types (registration, onboarding, etc.) and their values
@@ -294,7 +294,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 - Facilitate QA review of the partner's complete application — via API-based verification from 3P suites, human review via Wiom Hub Dashboard, or both
 - Receive and handle approved/rejected decisions from QA (automated, human, or combined)
 - Signal M4 on verification rejection (M4 coordinates refund via PG)
-- Facilitate technical assessment via sample device telemetry to evaluate partner's infrastructure performance
+- Facilitate technical assessment — sample devices are sent to the partner's location, and the internal team evaluates infrastructure performance from device telemetry data
 - Handle assessment passed/rejected outcomes
 
 **Is NOT Responsible For:**
@@ -321,11 +321,8 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 | Wiom User Registry (Internal) | Dedup checks |
 | Wiom Document Storage (Internal) | Store uploaded documents |
 | Wiom Hub Dashboard (Internal) | Send data for human review when configured, receive decisions |
-| 3P Verification Suites (3P) | API-based automated verification when configured |
-| Wiom Technical Assessment Service (Internal) | Request and receive assessment |
+| 3P Verification Suites (3P) | API-based automated verification (KYC, bank, identity) when configured |
 | Wiom Notification Service (Internal) | Status updates, decisions, results |
-| KYC Verification APIs (3P) — Future | Real identity document verification |
-| Bank Verification API (3P) — Future | Real bank account verification |
 
 | Depended On By | Why |
 |----------------|-----|
@@ -342,10 +339,10 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 
 📄 **Detail doc:** [`M6_CSP_POLICY.md`](M6_CSP_POLICY.md)
 
-**Objective:** Present Wiom's business policies, SLA terms, commission structure, and payout schedule. Record the partner's explicit acceptance before the final fee payment.
+**Objective:** Present Wiom's business policies, SLA terms, commission structure, and payout schedule. Record the partner's explicit acceptance. Serve accepted policies in the Partner BAU app and handle future policy updates.
 
 **Explain Like I'm 10:**
-You passed all checks. Before you pay the final amount, Wiom says: "Here's how this partnership works" — like a job offer letter. How much you'll earn, when you'll get paid, and what you must maintain. You say "samajh gaya" (understood), and that agreement is recorded forever.
+You passed all checks. Before you pay the final amount, Wiom says: "Here's how this partnership works" — like a job offer letter. How much you'll earn, when you'll get paid, and what you must maintain. You say "samajh gaya" (understood), and that agreement is recorded forever. After onboarding, the Partner app shows you the policies you agreed to. If Wiom updates policies later, the Partner app is where you'll see and accept those changes.
 
 **IS Responsible For:**
 - Present configured commission structure and payout schedule
@@ -353,6 +350,8 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 - Record partner's explicit acceptance
 - Maintain policy versions and track which version was accepted and when
 - Confirm to M4 that policy is accepted (enabling onboarding fee payment)
+- Serve accepted policies to the Wiom Partner BAU app for viewing
+- Handle future policy updates and addendums via the BAU app
 
 **Is NOT Responsible For:**
 - Enforcing SLA compliance post-onboarding (→ operational systems)
@@ -378,6 +377,7 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 | Depended On By | Why |
 |----------------|-----|
 | M4 — Fee Collection | Onboarding fee enabled only after policy accepted |
+| Wiom Partner BAU App | Serves accepted policies for viewing; handles future policy updates and addendums |
 
 | Must NOT Depend On |
 |---------------------|
@@ -519,7 +519,6 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | M5 | User Registry | Dedup checks |
 | M5 | Document Storage | Uploaded documents |
 | M5 | Wiom Hub Dashboard | Human review when configured, receive decisions |
-| M5 | Technical Assessment Service | Assessment requests/results |
 | M5 | Notification Service | Status and decision updates |
 | M6 | CMS / Policy Config | Policy content, rates, terms |
 | M6 | Partner Database | Policy acceptance records |
@@ -532,8 +531,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 |--------|------------|---------|
 | M1 | Identity Verification Provider | Verify partner identity |
 | M4 | Payment Gateway | Execute payment and refund transactions |
-| M5 | KYC Verification API (Future) | Identity document verification |
-| M5 | Bank Verification API (Future) | Bank account verification |
+| M5 | 3P Verification Suites | Automated KYC, bank, identity verification when configured |
 | M7 | Payout Infrastructure | Partner fund account creation |
 | M7 | CRM System | Partner registration |
 
@@ -610,6 +608,8 @@ These concerns are cross-cutting — they apply to **every module**. Implementat
 | 8 | **Audit Trail** | Every module logs: partner ID, module ID, event type, timestamp. Append-only. No deletion. |
 | 9 | **Session Management** | All modules operate within M1's authenticated session. Expired session → re-auth via M1, no data loss. |
 | 10 | **Data Privacy** | PII encrypted at rest and in transit. Access is role-based and logged. No sharing outside declared dependencies. |
+| 11 | **Versioning & Mid-Journey Stability** | When configurations change (fee values, T&C, policies), partners mid-journey continue on the version they started with. New versions apply only to new journeys unless explicitly migrated. |
+| 12 | **Notification Service** | Shared across M1, M4, M5, M6, M7. Handles drop-off recovery nudges (docs not uploaded, fee not paid), celebratory milestones, status updates (QA decisions, refunds), engagement (post-onboarding), support/helpline, and uninstall re-engagement. Channels: Push + WhatsApp (simultaneous), SMS as fallback. See [`NOTIFICATION_CAMPAIGNS.md`](../NOTIFICATION_CAMPAIGNS.md) for full campaign spec. |
 
 ---
 
@@ -620,7 +620,7 @@ These concerns are cross-cutting — they apply to **every module**. Implementat
 | **CSP** | Connection Service Provider — local entrepreneur who partners with Wiom to provide internet services |
 | **KYC** | Know Your Customer — identity verification using government-issued documents |
 | **Dedup** | Deduplication — checking if a value (phone, bank account, identity number) is already registered |
-| **OTP** | One-Time Password — temporary code to verify phone ownership |
+| **OTP** | One-Time Password — temporary code to verify identity ownership |
 | **ISP** | Internet Service Provider — company whose internet the CSP resells |
 | **SLA** | Service Level Agreement — performance standards the CSP must maintain |
 | **TAT** | Turn Around Time — expected duration for a process |
