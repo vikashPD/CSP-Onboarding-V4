@@ -49,7 +49,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 | **M1** | Authentication | Phase 1 | Verify the partner owns a unique identity and establish an authenticated session |
 | **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance |
 | **M3** | Registration | Phase 1 | Collect personal, business, and location details |
-| **M4** | Fee Collection | Phase 1, 3 | Collect configured fees at defined checkpoints, handle refunds |
+| **M4** | Fee Collection | Phase 1, 3 | Configure fee types, values, and checkpoints; connect to PG for execution; ensure financial reconciliation |
 | **M5** | Verification & Assessment | Phase 2, 3 | Collect documents, facilitate QA review, conduct tech assessment |
 | **M6** | CSP Policy | Phase 3 | Present policies, SLA, commissions; record acceptance |
 | **M7** | CSP Account Setup | Phase 3 | Create backend accounts, confirm onboarding |
@@ -213,44 +213,47 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 📄 **Detail doc:** [`M4_FEE.md`](M4_FEE.md)
 
-**Objective:** Collect fees from the partner at configured checkpoints in the journey. Handle payment success, failure, timeout, and refunds.
+**Objective:** Configure fee types, fee values, and payment checkpoints for the onboarding journey. Connect to payment layers for transaction execution and ensure complete financial reconciliation.
 
 **Explain Like I'm 10:**
-Joining the Wiom club costs money — paid in stages. First a registration deposit (refundable if Wiom says no), then a final onboarding fee once you pass all checks. This module is the cashier: takes money, gives receipts, and returns money if needed. It doesn't decide the amounts or when refunds happen — it just executes.
+Joining the Wiom club costs money — paid in stages. This module is the price list and the accountant's ledger — it decides what fees exist, how much each one costs, and at which step in the journey they must be paid. When it's time to actually collect the money, it hands the job to a payment system (like Razorpay). When a refund needs to happen, the payment system handles that too. This module's job is to make sure every rupee is tracked — what was charged, what was paid, what was refunded — so the books always balance.
 
 **IS Responsible For:**
-- Present fee payment screens at configured checkpoints
-- Display investment summary (what's paid, what's due)
-- Initiate payment transactions via payment gateway
-- Handle payment success, failure, and timeout states
-- Process refunds when triggered by upstream modules
-- Show refund status to the partner
+- Configure fee types (registration, onboarding, etc.) and their values
+- Define which fee applies at which checkpoint in the journey
+- Define refundability rules per fee type
+- Present fee details and investment summary to the partner
+- Connect to payment gateway layer for transaction execution
+- Track payment status (success, failure, timeout, pending) received from PG
+- Track refund status received from PG
+- Maintain complete financial reconciliation for every partner
 - Trigger post-payment actions in other modules (e.g., trade name lock after registration fee)
 - Manage payment reminder nudges for pending payments
 
 **Is NOT Responsible For:**
-- Deciding whether a refund should happen (→ triggered by M5)
+- Processing payments — that's the PG layer
+- Processing refunds — that's the PG layer
 - Collecting partner information (→ M1, M2, M3)
 - Document verification (→ M5)
-- Determining fee amounts or refund policies — these are business configurations
+- Deciding when a refund should happen (→ triggered by M5)
 
 **Must NEVER:**
-- Initiate payment without prerequisite module completions
+- Process payments or refunds directly — must delegate to PG layer
 - Store PCI-sensitive data (card numbers, CVV) on client
-- Modify fee amounts — these are business-configured constants
-- Process a refund on its own authority — only on upstream trigger
-- Auto-retry payment without explicit partner action
+- Allow fee configuration changes to take effect mid-journey for an active partner
+- Initiate payment without prerequisite module completions
+- Show a fee as "paid" without confirmed status from PG
 
 **Dependencies:**
 
 | Depends On | Why |
 |------------|-----|
-| M3 — Registration | Partner profile for payment screens |
+| M3 — Registration | Partner profile for payment context |
 | M5 — Verification & Assessment | For onboarding fee: verification + assessment must pass. For refunds: rejection trigger |
 | M6 — CSP Policy | Policy accepted before onboarding fee |
-| Payment Gateway (3P) | Process payments and refunds |
-| Wiom Ledger / Finance Service (Internal) | Record transactions |
-| Wiom Notification Service (Internal) | Confirmations, reminders, refund updates |
+| Payment Gateway (3P) | Executes all payment and refund transactions |
+| Wiom Ledger / Finance Service (Internal) | Financial reconciliation records |
+| Wiom Notification Service (Internal) | Confirmations, reminders, status updates |
 
 | Depended On By | Why |
 |----------------|-----|
@@ -283,7 +286,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 - Provide sample/reference documents for all upload stages
 - Display document submission status and checklist
 - Send submitted data to QA review team and receive approved/rejected decisions
-- Trigger refund in M4 on verification rejection
+- Signal M4 on verification rejection (M4 coordinates refund via PG)
 - Facilitate technical assessment of partner's infrastructure and location
 - Handle assessment passed/rejected outcomes
 
@@ -447,7 +450,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 │                            ┌─────────┴────────┐                  │
 │                            ▼                  ▼                  │
 │                       [Approved]         [Rejected]              │
-│                            │             → Refund (M4)           │
+│                            │             → Refund via PG (M4)           │
 │                            ▼               END                   │
 │                      [Tech Passed]                               │
 │                            │                                     │
@@ -480,7 +483,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | M3 → M4 | Profile data enables registration fee payment |
 | M4 → M3 | Registration fee triggers trade name lock |
 | M4 → M5 | Registration fee confirmed unlocks verification phase |
-| M5 → M4 | Rejection triggers refund |
+| M5 → M4 | Rejection signals M4 to coordinate refund via PG |
 | M5 → M6 | Approved + tech passed unlocks policy |
 | M6 → M4 | Policy accepted enables onboarding fee |
 | M4 → M7 | Onboarding fee confirmed unlocks account setup |
@@ -497,7 +500,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | M2 | Partner Database | Acceptance records |
 | M3 | Geo/Location Service | GPS, location validation |
 | M3 | Partner Database | Partner profile |
-| M4 | Ledger / Finance Service | Payment/refund records |
+| M4 | Ledger / Finance Service | Financial reconciliation records |
 | M4 | Notification Service | Confirmations, reminders |
 | M5 | User Registry | Dedup checks |
 | M5 | Document Storage | Uploaded documents |
@@ -514,7 +517,7 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | Module | Integration | Purpose |
 |--------|------------|---------|
 | M1 | Identity Verification Provider | Verify partner identity |
-| M4 | Payment Gateway | Process payments and refunds |
+| M4 | Payment Gateway | Execute payment and refund transactions |
 | M5 | KYC Verification API (Future) | Identity document verification |
 | M5 | Bank Verification API (Future) | Bank account verification |
 | M7 | Payout Infrastructure | Partner fund account creation |
@@ -546,7 +549,7 @@ PARTNER OPENS APP
        ▼
   ┌─────────┐
   │   M5    │  Documents → QA Review
-  │         │     ├── REJECTED → Refund (M4) → END
+  │         │     ├── REJECTED → Refund via PG (M4) → END
   │         │     └── APPROVED → Tech Assessment
   │         │           ├── REJECTED → No refund → END
   │         │           └── PASSED ↓
