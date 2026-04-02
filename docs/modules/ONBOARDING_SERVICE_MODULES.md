@@ -46,13 +46,13 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 
 | ID | Formal Name | Phase(s) | One-Line Purpose |
 |----|-------------|----------|------------------|
-| **M1** | Authentication Service | Phase 1 | Verify partner's mobile number via OTP and establish identity |
-| **M2** | Terms & Conditions Service | Phase 1 | Manage T&C versions, present terms, record acceptance |
-| **M3** | Registration Service | Phase 1 | Collect personal, business, and location details |
-| **M4** | Fee Collection Service | Phase 1, 3 | Collect configured fees at defined checkpoints, handle refunds |
-| **M5** | Verification & Assessment Service | Phase 2, 3 | Collect documents, facilitate QA review, conduct tech assessment |
-| **M6** | CSP Policy Service | Phase 3 | Present policies, SLA, commissions; record acceptance |
-| **M7** | CSP Account Setup Service | Phase 3 | Create backend accounts, confirm onboarding |
+| **M1** | Authentication | Phase 1 | Verify partner's mobile number via OTP and establish identity |
+| **M2** | Terms & Conditions | Phase 1 | Manage T&C versions, present terms, record acceptance |
+| **M3** | Registration | Phase 1 | Collect personal, business, and location details |
+| **M4** | Fee Collection | Phase 1, 3 | Collect configured fees at defined checkpoints, handle refunds |
+| **M5** | Verification & Assessment | Phase 2, 3 | Collect documents, facilitate QA review, conduct tech assessment |
+| **M6** | CSP Policy | Phase 3 | Present policies, SLA, commissions; record acceptance |
+| **M7** | CSP Account Setup | Phase 3 | Create backend accounts, confirm onboarding |
 
 ---
 
@@ -62,7 +62,7 @@ The onboarding service takes a new Connection Service Provider from "I'm interes
 
 ---
 
-### M1 — Authentication Service
+### M1 — Authentication
 
 📄 **Detail doc:** [`M1_AUTH.md`](M1_AUTH.md)
 
@@ -100,8 +100,8 @@ Before joining the Wiom shopkeeper club, you prove you have a real phone number.
 
 | Depended On By | Why |
 |----------------|-----|
-| M2 — TnC Service | Needs verified phone before showing T&C |
-| M3 — Registration Service | Receives verified phone as identity anchor |
+| M2 — Terms & Conditions | Needs verified phone before showing T&C |
+| M3 — Registration | Receives verified phone as identity anchor |
 
 | Must NOT Depend On |
 |---------------------|
@@ -109,7 +109,7 @@ Before joining the Wiom shopkeeper club, you prove you have a real phone number.
 
 ---
 
-### M2 — Terms & Conditions Service
+### M2 — Terms & Conditions
 
 📄 **Detail doc:** [`M2_TNC.md`](M2_TNC.md)
 
@@ -142,13 +142,13 @@ Before playing any game, you read the rules and say "I agree." This module is th
 
 | Depends On | Why |
 |------------|-----|
-| M1 — Authentication Service | Partner must be verified first |
+| M1 — Authentication | Partner must be verified first |
 | Wiom CMS / Legal Content Service (Internal) | Fetch T&C versions and content |
 | Wiom Partner Database (Internal) | Store acceptance records |
 
 | Depended On By | Why |
 |----------------|-----|
-| M3 — Registration Service | Cannot begin until T&C accepted |
+| M3 — Registration | Cannot begin until T&C accepted |
 
 | Must NOT Depend On |
 |---------------------|
@@ -156,7 +156,7 @@ Before playing any game, you read the rules and say "I agree." This module is th
 
 ---
 
-### M3 — Registration Service
+### M3 — Registration
 
 📄 **Detail doc:** [`M3_REGISTRATION.md`](M3_REGISTRATION.md)
 
@@ -191,8 +191,8 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 | Depends On | Why |
 |------------|-----|
-| M1 — Authentication Service | Verified phone as identity anchor |
-| M2 — Terms & Conditions Service | T&C must be accepted first |
+| M1 — Authentication | Verified phone as identity anchor |
+| M2 — Terms & Conditions | T&C must be accepted first |
 | Wiom Geo/Location Service (Internal) | GPS capture, location validation |
 | Wiom Partner Database (Internal) | Store partner profile |
 
@@ -208,7 +208,7 @@ Now you tell Wiom who you are: "My name is Rajesh, my shop is Rajesh Telecom, I'
 
 ---
 
-### M4 — Fee Collection Service
+### M4 — Fee Collection
 
 📄 **Detail doc:** [`M4_FEE.md`](M4_FEE.md)
 
@@ -244,18 +244,18 @@ Joining the Wiom club costs money — paid in stages. First a registration depos
 
 | Depends On | Why |
 |------------|-----|
-| M3 — Registration Service | Partner profile for payment screens |
-| M5 — Verification Service | For onboarding fee: verification + assessment must pass. For refunds: rejection trigger |
-| M6 — CSP Policy Service | Policy accepted before onboarding fee |
+| M3 — Registration | Partner profile for payment screens |
+| M5 — Verification & Assessment | For onboarding fee: verification + assessment must pass. For refunds: rejection trigger |
+| M6 — CSP Policy | Policy accepted before onboarding fee |
 | Payment Gateway (3P) | Process payments and refunds |
 | Wiom Ledger / Finance Service (Internal) | Record transactions |
 | Wiom Notification Service (Internal) | Confirmations, reminders, refund updates |
 
 | Depended On By | Why |
 |----------------|-----|
-| M5 — Verification Service | Verification phase starts after registration fee confirmed |
+| M5 — Verification & Assessment | Verification phase starts after registration fee confirmed |
 | M7 — Account Setup | Starts after onboarding fee confirmed |
-| M3 — Registration Service | Trade name lock after registration fee |
+| M3 — Registration | Trade name lock after registration fee |
 
 | Must NOT Depend On |
 |---------------------|
@@ -263,7 +263,7 @@ Joining the Wiom club costs money — paid in stages. First a registration depos
 
 ---
 
-### M5 — Verification & Assessment Service
+### M5 — Verification & Assessment
 
 📄 **Detail doc:** [`M5_VERIFICATION_ASSESSMENT.md`](M5_VERIFICATION_ASSESSMENT.md)
 
@@ -305,7 +305,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 
 | Depends On | Why |
 |------------|-----|
-| M3 — Registration Service | Partner profile for document cross-referencing |
+| M3 — Registration | Partner profile for document cross-referencing |
 | M4 — Fee Collection | Verification phase starts after registration fee confirmed |
 | Wiom User Registry (Internal) | Dedup checks |
 | Wiom Document Storage (Internal) | Store uploaded documents |
@@ -326,7 +326,7 @@ You've told Wiom your name and paid your deposit. Now they check if you're the r
 
 ---
 
-### M6 — CSP Policy Service
+### M6 — CSP Policy
 
 📄 **Detail doc:** [`M6_CSP_POLICY.md`](M6_CSP_POLICY.md)
 
@@ -359,7 +359,7 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 
 | Depends On | Why |
 |------------|-----|
-| M5 — Verification Service | Presented only after verification approved + tech assessment passed |
+| M5 — Verification & Assessment | Presented only after verification approved + tech assessment passed |
 | Wiom CMS / Policy Config (Internal) | Fetch policy content, rates, terms |
 | Wiom Partner Database (Internal) | Store acceptance records |
 
@@ -373,7 +373,7 @@ You passed all checks. Before you pay the final amount, Wiom says: "Here's how t
 
 ---
 
-### M7 — CSP Account Setup Service
+### M7 — CSP Account Setup
 
 📄 **Detail doc:** [`M7_CSP_ACCOUNT_SETUP.md`](M7_CSP_ACCOUNT_SETUP.md)
 
@@ -409,8 +409,8 @@ You did everything — verified, checked, paid. Now Wiom sets up your "shop" in 
 | Depends On | Why |
 |------------|-----|
 | M4 — Fee Collection | Starts after onboarding fee confirmed |
-| M3 — Registration Service | Reads full partner profile |
-| M5 — Verification Service | Reads verified bank details for payout setup |
+| M3 — Registration | Reads full partner profile |
+| M5 — Verification & Assessment | Reads verified bank details for payout setup |
 | Payout Infrastructure (3P) | Create partner fund account |
 | CRM System (3P) | Register partner |
 | Wiom Ledger / Finance Service (Internal) | Create financial ledger |
@@ -604,10 +604,10 @@ These concerns are cross-cutting — they apply to **every module**. Implementat
 ---
 
 **Module Documents:**
-- [`M1_AUTH.md`](M1_AUTH.md) — Authentication Service
-- [`M2_TNC.md`](M2_TNC.md) — Terms & Conditions Service
-- [`M3_REGISTRATION.md`](M3_REGISTRATION.md) — Registration Service
-- [`M4_FEE.md`](M4_FEE.md) — Fee Collection Service
-- [`M5_VERIFICATION_ASSESSMENT.md`](M5_VERIFICATION_ASSESSMENT.md) — Verification & Assessment Service
-- [`M6_CSP_POLICY.md`](M6_CSP_POLICY.md) — CSP Policy Service
-- [`M7_CSP_ACCOUNT_SETUP.md`](M7_CSP_ACCOUNT_SETUP.md) — CSP Account Setup Service
+- [`M1_AUTH.md`](M1_AUTH.md) — Authentication
+- [`M2_TNC.md`](M2_TNC.md) — Terms & Conditions
+- [`M3_REGISTRATION.md`](M3_REGISTRATION.md) — Registration
+- [`M4_FEE.md`](M4_FEE.md) — Fee Collection
+- [`M5_VERIFICATION_ASSESSMENT.md`](M5_VERIFICATION_ASSESSMENT.md) — Verification & Assessment
+- [`M6_CSP_POLICY.md`](M6_CSP_POLICY.md) — CSP Policy
+- [`M7_CSP_ACCOUNT_SETUP.md`](M7_CSP_ACCOUNT_SETUP.md) — CSP Account Setup
